@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 
 public class ArimaaPanel extends JPanel {
 
-	final int GRIDSIZE=30;
+	final int GRIDSIZE = 90;
 	
 	int[][] board = new int[8][8];//[rows][columns]
 	final int NONE=0;
@@ -31,13 +31,13 @@ public class ArimaaPanel extends JPanel {
 				if(board[j][i]==TRAP) {
 					g.setColor(Color.RED);
 				}
-				else if(i+j%2==0) {
+				else if((i+j)%2==0) {
 					g.setColor(Color.BLACK);
 				}
 				else{
 					g.setColor(Color.WHITE);
 				}
-				g.fillRect(i*GRIDSIZE, j*GRIDSIZE, (i+1)*GRIDSIZE, (j+1)*GRIDSIZE);
+				g.fillRect(i*GRIDSIZE, j*GRIDSIZE, GRIDSIZE, GRIDSIZE);
 			}
 		}
 	}

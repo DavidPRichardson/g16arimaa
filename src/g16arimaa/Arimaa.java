@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -29,12 +30,14 @@ JButton pullbutton = new JButton("Pull");
 JButton restartbutton = new JButton("Restart");
 JButton skipbutton = new JButton("Skip");
 
+ArrayList<Piece> pieces = new ArrayList<Piece>();
+
 	public static void main(String args[]) {
 		Arimaa arimaa = new Arimaa(); 
 	}
 	
 	public Arimaa() {
-		frame.setSize((int) screen.getWidth(), (int) screen.getHeight() - 32);
+		frame.setSize(1000, 800);
 		frame.setLayout(new BorderLayout());
 		frame.add(panel, BorderLayout.CENTER);
 		
