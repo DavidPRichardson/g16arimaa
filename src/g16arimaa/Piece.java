@@ -8,17 +8,20 @@ public class Piece {
 	int x,y,strength;
 	boolean isPresent;
 	Image myimage;
+	int color;
+	final int GOLD=1, SILVER=2;
 	
 	//constructor
-	public Piece(int x,int y) {
+	public Piece(int x,int y,int color) {
 		this.x=x;
 		this.y=y;
+		this.color=color;
 		isPresent=true;
 	}
 	
 	//paint component
 	public void paintPiece(Graphics g) {
-		
+		g.drawImage(myimage,(int)x,y,null);
 	}
 
 	//getters and setters
