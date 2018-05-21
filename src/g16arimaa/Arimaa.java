@@ -18,6 +18,8 @@ import javax.swing.JLabel;
 public class Arimaa implements ActionListener, MouseListener {
 Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 // alvinalexander.com/blog/post/jfc-swing/how-determine-get-screen-size-java-swing-app
+int width = 932;
+int height = 800;
 JFrame frame = new JFrame("Arimaa");
 ArimaaPanel panel = new ArimaaPanel();
 Container east = new Container();
@@ -37,7 +39,7 @@ ArrayList<Piece> pieces = new ArrayList<Piece>();
 	}
 	
 	public Arimaa() {
-		frame.setSize(1000, 800);
+		frame.setSize(width, height);
 		frame.setLayout(new BorderLayout());
 		frame.add(panel, BorderLayout.CENTER);
 		
@@ -89,9 +91,10 @@ ArrayList<Piece> pieces = new ArrayList<Piece>();
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
+	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+		System.out.println(e.getX());
+		System.out.println(e.getY());
 	}
 
 	@Override

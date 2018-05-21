@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 
 public class ArimaaPanel extends JPanel {
 
-	final int GRIDSIZE = 90;
+	int gridsize;//this should mostly be kept constant
 	
 	int[][] board = new int[8][8];//[rows][columns]
 	final int NONE=0;
@@ -24,6 +24,7 @@ public class ArimaaPanel extends JPanel {
 	}
 	
 	public void paintComponent(Graphics g) {
+		gridsize = Math.min(getHeight(), getWidth()) / 8;
 		super.paintComponent(g);
 		//paintBoards
 		for (int j = 0; j < board.length; j++) {//go through rows
@@ -37,7 +38,7 @@ public class ArimaaPanel extends JPanel {
 				else{
 					g.setColor(Color.WHITE);
 				}
-				g.fillRect(i*GRIDSIZE, j*GRIDSIZE, GRIDSIZE, GRIDSIZE);
+				g.fillRect(i*gridsize, j*gridsize, gridsize, gridsize);
 			}
 		}
 	}
