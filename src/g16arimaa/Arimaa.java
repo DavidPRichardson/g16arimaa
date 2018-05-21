@@ -93,8 +93,10 @@ ArrayList<Piece> pieces = new ArrayList<Piece>();
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println(e.getX());
-		System.out.println(e.getY());
+		int ygrid = e.getY()/panel.getGridsize();
+		int xgrid = e.getX()/panel.getGridsize();
+		System.out.println(ygrid);
+		System.out.println(xgrid);
 	}
 
 	@Override
