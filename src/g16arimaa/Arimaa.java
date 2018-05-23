@@ -16,53 +16,67 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 public class Arimaa implements ActionListener, MouseListener {
-Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-// alvinalexander.com/blog/post/jfc-swing/how-determine-get-screen-size-java-swing-app
-int width = 932;
-int height = 800;
-JFrame frame = new JFrame("Arimaa");
-ArimaaPanel panel = new ArimaaPanel();
-Container east = new Container();
-JLabel turnlabel = new JLabel("Turn");
-JLabel silverturnlabel = new JLabel("Silver");
-JLabel goldturnlabel = new JLabel("Gold");
-JLabel movesleftlabel = new JLabel("Moves:");
-JButton pushbutton = new JButton("Push");
-JButton pullbutton = new JButton("Pull");
-JButton restartbutton = new JButton("Restart");
-JButton skipbutton = new JButton("Skip");
-Container south = new Container();
-JButton placerabbit = new JButton("rabbit");
-JButton placecat = new JButton("cat");
-JButton placedog = new JButton("dog");
-JButton placehorse = new JButton();
-JButton placecamel = new JButton();
-JButton placeelephant = new JButton();
+	Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+	// alvinalexander.com/blog/post/jfc-swing/how-determine-get-screen-size-java-swing-app
+	int width = 932;
+	int height = 800;
+	JFrame frame = new JFrame("Arimaa");
+	ArimaaPanel panel = new ArimaaPanel();
+	Container east = new Container();
+	JLabel turnlabel = new JLabel("Turn");
+	JLabel silverturnlabel = new JLabel("Silver");
+	JLabel goldturnlabel = new JLabel("Gold");
+	JLabel movesleftlabel = new JLabel("Moves:");
+	JButton pushbutton = new JButton("Push");
+	JButton pullbutton = new JButton("Pull");
+	JButton restartbutton = new JButton("Restart");
+	JButton skipbutton = new JButton("Skip");
+	Container south = new Container();
+	JButton placerabbit = new JButton("rabbit");
+	JButton placecat = new JButton("cat");
+	JButton placedog = new JButton("dog");
+	JButton placehorse = new JButton("horse");
+	JButton placecamel = new JButton("camel");
+	JButton placeelephant = new JButton("elephant");
 
-ArrayList<Piece> pieces = new ArrayList<Piece>();
-int rabbitsleft = 8;
-int catsleft = 2;
-int dogsleft = 2;
-int horsesleft = 2;
-int camelsleft = 1;
-int elephantsleft = 1;
+	// ArrayList<Piece> pieces = new ArrayList<Piece>();
+	int rabbitsleft = 8;
+	int catsleft = 2;
+	int dogsleft = 2;
+	int horsesleft = 2;
+	int camelsleft = 1;
+	int elephantsleft = 1;
+
+	final int RABBIT = 0;
+	final int CAT = 1;
+	final int DOG = 2;
+	final int HORSE = 3;
+	final int CAMEL = 4;
+	final int ELEPHANT = 5;
+	int piecetobeplaced;
+
+	boolean placementphase = true;
+
+	final int GOLD = 1;
+	final int SILVER = 2;
+	int turn = GOLD;
 
 	public static void main(String args[]) {
-		Arimaa arimaa = new Arimaa(); 
+		Arimaa arimaa = new Arimaa();
 	}
-	
+
 	public Arimaa() {
 		frame.setSize(width, height);
 		frame.setLayout(new BorderLayout());
 		frame.add(panel, BorderLayout.CENTER);
-		
+
 		east.setLayout(new GridLayout(5, 2));
 		east.add(turnlabel);
-		east.add(new JLabel(""));//empty for formating
+		east.add(new JLabel(""));// empty for formating
 		east.add(silverturnlabel);
 		east.add(goldturnlabel);
 		east.add(movesleftlabel);
-		east.add(new JLabel(""));//empty for formating
+		east.add(new JLabel(""));// empty for formating
 		east.add(pushbutton);
 		pushbutton.addActionListener(this);
 		east.add(pullbutton);
@@ -72,16 +86,22 @@ int elephantsleft = 1;
 		east.add(skipbutton);
 		skipbutton.addActionListener(this);
 		frame.add(east, BorderLayout.EAST);
-		
+
 		south.setLayout(new GridLayout(1, 6));
 		south.add(placerabbit);
+		placerabbit.addActionListener(this);
 		south.add(placecat);
+		placecat.addActionListener(this);
 		south.add(placedog);
+		placedog.addActionListener(this);
 		south.add(placehorse);
+		placehorse.addActionListener(this);
 		south.add(placecamel);
+		placecamel.addActionListener(this);
 		south.add(placeelephant);
+		placeelephant.addActionListener(this);
 		frame.add(south, BorderLayout.SOUTH);
-		
+
 		panel.addMouseListener(this);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -91,39 +111,178 @@ int elephantsleft = 1;
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		int ygrid = e.getY()/panel.getGridsize();
-		int xgrid = e.getX()/panel.getGridsize();
-		System.out.println(ygrid);
-		System.out.println(xgrid);
+		int ygrid = e.getY() / panel.getGridsize();
+		int xgrid = e.getX() / panel.getGridsize();
+		if (placementphase && !isSquareEmpty(xgrid, ygrid)) {
+			if (turn == GOLD && ygrid > 5) {
+				switch (piecetobeplaced) {
+				case RABBIT:
+					if (rabbitsleft > 0) {
+						panel.addPiece(new Rabbit(xgrid, ygrid, GOLD));
+						rabbitsleft--;
+					}
+					break;
+				case CAT:
+					if (catsleft > 0) {
+						panel.addPiece(new Cat(xgrid, ygrid, GOLD));
+						catsleft--;
+					}
+					break;
+				case DOG:
+					if (dogsleft > 0) {
+						panel.addPiece(new Dog(xgrid, ygrid, GOLD));
+						dogsleft--;
+					}
+					break;
+				case HORSE:
+					if (horsesleft > 0) {
+						panel.addPiece(new Horse(xgrid, ygrid, GOLD));
+						horsesleft--;
+					}
+					break;
+				case CAMEL:
+					if (camelsleft > 0) {
+						panel.addPiece(new Camel(xgrid, ygrid, GOLD));
+						camelsleft--;
+					}
+					break;
+				case ELEPHANT:
+					if (elephantsleft > 0) {
+						panel.addPiece(new Elephant(xgrid, ygrid, GOLD));
+						elephantsleft--;
+					}
+					break;
+
+				default:
+					break;
+				}
+				panel.repaint();
+				if(endplacementturn()) {
+					turn = SILVER;
+				}
+			}
+			if (turn == SILVER && ygrid < 2) {
+				switch (piecetobeplaced) {
+				case RABBIT:
+					if (rabbitsleft > 0) {
+						panel.addPiece(new Rabbit(xgrid, ygrid, SILVER));
+						rabbitsleft--;
+					}
+					break;
+				case CAT:
+					if (catsleft > 0) {
+						panel.addPiece(new Cat(xgrid, ygrid, SILVER));
+						catsleft--;
+					}
+					break;
+				case DOG:
+					if (dogsleft > 0) {
+						panel.addPiece(new Dog(xgrid, ygrid, SILVER));
+						dogsleft--;
+					}
+					break;
+				case HORSE:
+					if (horsesleft > 0) {
+						panel.addPiece(new Horse(xgrid, ygrid, SILVER));
+						horsesleft--;
+					}
+					break;
+				case CAMEL:
+					if (camelsleft > 0) {
+						panel.addPiece(new Camel(xgrid, ygrid, SILVER));
+						camelsleft--;
+					}
+					break;
+				case ELEPHANT:
+					if (elephantsleft > 0) {
+						panel.addPiece(new Elephant(xgrid, ygrid, SILVER));
+						elephantsleft--;
+					}
+					break;
+
+				default:
+					break;
+				}
+				panel.repaint();
+				if(endplacementturn()) {
+					turn = GOLD;
+					placementphase = false;
+				}
+			}
+		}
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
+		if (e.getSource().equals(placerabbit)) {
+			piecetobeplaced = RABBIT;
+		}
+		if (e.getSource().equals(placecat)) {
+			piecetobeplaced = CAT;
+		}
+		if (e.getSource().equals(placedog)) {
+			piecetobeplaced = DOG;
+		}
+		if (e.getSource().equals(placehorse)) {
+			piecetobeplaced = HORSE;
+		}
+		if (e.getSource().equals(placecamel)) {
+			piecetobeplaced = CAMEL;
+		}
+		if (e.getSource().equals(placeelephant)) {
+			piecetobeplaced = ELEPHANT;
+		}
+	}
+	/**
+	 * check if every piece has been placed
+	 * @return
+	 */
+	public boolean endplacementturn() {
+		if(rabbitsleft == 0 && catsleft == 0
+		&& dogsleft == 0 && horsesleft == 0
+		&& camelsleft == 0 && elephantsleft == 0) {
+			rabbitsleft = 8;
+			catsleft = 2;
+			dogsleft = 2;
+			horsesleft = 2;
+			camelsleft = 1;
+			elephantsleft = 1;
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean isSquareEmpty(int xgrid, int ygrid) {
+		for (int i = 0; i < panel.getPieces().size(); i++) {
+			if(panel.getPieces().get(i).getX() == xgrid && panel.getPieces().get(i).getY() == ygrid) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

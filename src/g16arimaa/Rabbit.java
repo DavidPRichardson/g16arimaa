@@ -12,10 +12,10 @@ public class Rabbit extends Piece{
 		strength=0;
 		try {
 			if(color==GOLD) {
-				myimage = ImageIO.read(new File("rabbit_gold.png"));
+				myimage = ImageIO.read(new File("mouse_gold.png"));
 			}
 			else if(color==SILVER) {
-				myimage = ImageIO.read(new File("rabbit_silver.png"));
+				myimage = ImageIO.read(new File("mouse_silver.png"));
 			}
 			
 		} catch (IOException e) {

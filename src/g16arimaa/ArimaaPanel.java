@@ -47,7 +47,7 @@ public class ArimaaPanel extends JPanel {
 			}
 		}
 		for (int i = 0; i < pieces.size(); i++) {
-			pieces.get(i).paintPiece(g);
+			pieces.get(i).paintPiece(g, gridsize);
 		}
 	}
 	
@@ -79,6 +79,12 @@ public class ArimaaPanel extends JPanel {
 	 */
 	public void setBoardSquare(int y, int x, int value) {
 		board[y][x] = value;
+	}
+	public void addPiece(Piece p) {
+		pieces.add(p);
+	}
+	public ArrayList<Piece> getPieces() {
+		return pieces;
 	}
 }
 

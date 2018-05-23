@@ -20,8 +20,8 @@ public class Piece {
 	}
 	
 	//paint component
-	public void paintPiece(Graphics g) {
-		g.drawImage(myimage,(int)x,y,null);
+	public void paintPiece(Graphics g, int gridsize) {
+		g.drawImage(myimage,(int)x*gridsize,y*gridsize,null);
 	}
 
 	//getters and setters
