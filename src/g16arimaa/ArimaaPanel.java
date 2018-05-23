@@ -2,6 +2,7 @@ package g16arimaa;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
@@ -16,6 +17,8 @@ public class ArimaaPanel extends JPanel {
 	final int TRAP=3;
 	final int TRAP_WITH_GOLD = 4;
 	final int TRAP_WITH_SILVER = 5;
+	
+	ArrayList<Piece> pieces = new ArrayList<Piece>();
 	
 	public ArimaaPanel() {
 		super();
@@ -42,6 +45,9 @@ public class ArimaaPanel extends JPanel {
 				}
 				g.fillRect(i*gridsize, j*gridsize, gridsize, gridsize);
 			}
+		}
+		for (int i = 0; i < pieces.size(); i++) {
+			pieces.get(i).paintPiece(g);
 		}
 	}
 	
