@@ -23,7 +23,7 @@ public class ArimaaPanel extends JPanel {
 	public ArimaaPanel() {
 		super();
 		board[2][2]=TRAP;
-		board[2][2]=TRAP;
+		board[5][2]=TRAP;
 		board[2][5]=TRAP;
 		board[5][5]=TRAP;
 	}

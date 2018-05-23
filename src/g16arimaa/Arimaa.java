@@ -31,8 +31,21 @@ JButton pushbutton = new JButton("Push");
 JButton pullbutton = new JButton("Pull");
 JButton restartbutton = new JButton("Restart");
 JButton skipbutton = new JButton("Skip");
+Container south = new Container();
+JButton placerabbit = new JButton("rabbit");
+JButton placecat = new JButton("cat");
+JButton placedog = new JButton("dog");
+JButton placehorse = new JButton();
+JButton placecamel = new JButton();
+JButton placeelephant = new JButton();
 
 ArrayList<Piece> pieces = new ArrayList<Piece>();
+int rabbitsleft = 8;
+int catsleft = 2;
+int dogsleft = 2;
+int horsesleft = 2;
+int camelsleft = 1;
+int elephantsleft = 1;
 
 	public static void main(String args[]) {
 		Arimaa arimaa = new Arimaa(); 
@@ -59,6 +72,15 @@ ArrayList<Piece> pieces = new ArrayList<Piece>();
 		east.add(skipbutton);
 		skipbutton.addActionListener(this);
 		frame.add(east, BorderLayout.EAST);
+		
+		south.setLayout(new GridLayout(1, 6));
+		south.add(placerabbit);
+		south.add(placecat);
+		south.add(placedog);
+		south.add(placehorse);
+		south.add(placecamel);
+		south.add(placeelephant);
+		frame.add(south, BorderLayout.SOUTH);
 		
 		panel.addMouseListener(this);
 
