@@ -296,7 +296,7 @@ public class Arimaa implements ActionListener, MouseListener {
 				selectedpiece = panel.getPiece(xgrid, ygrid);
 			} else if(panel.getPiece(xgrid, ygrid) == null){
 				//move the piece
-				panel.move(selectedpiece, xgrid, ygrid);
+				panel.move(selectedpiece, xgrid, ygrid,true);
 			}
 		}
 	}
