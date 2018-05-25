@@ -81,6 +81,9 @@ public class ArimaaPanel extends JPanel {
 			if(checkMove(piece) && getPiece(moved_xgrid,moved_ygrid) == null){
 				piece.setX(moved_xgrid);
 				piece.setY(moved_ygrid);
+				if(checktrap(piece.getX(),piece.getY(),piece.getColor())) {
+					pieces.remove(piece);
+				}
 				repaint();
 			}
 			else {
@@ -133,8 +136,20 @@ public class ArimaaPanel extends JPanel {
 		}	
 	}
 	
-	public boolean checktrap(int x, int y){
-		
+	public boolean checktrap(int x, int y,int color){
+		if(trap[x][y]) {
+			friend=false;
+			check_enemy_and_friend(x-1,y,0,color);
+			check_enemy_and_friend(x+1,y,0,color);
+			check_enemy_and_friend(x,y-1,0,color);
+			check_enemy_and_friend(x,y+1,0,color);
+			if(friend) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
 		return false;
 	}
 }
