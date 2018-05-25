@@ -51,6 +51,16 @@ public class ArimaaPanel extends JPanel {
 		}
 	}
 	
+	public Piece getPiece(int x, int y) {
+		for (int i = 0; i < pieces.size(); i++) {
+			if(x>pieces.get(i).getX()-gridsize && x<pieces.get(i).getX()+gridsize
+					&& y>pieces.get(i).getY()-gridsize && y<pieces.get(i).getY()+gridsize) {
+				return pieces.get(i);
+			}
+		}
+		return null;
+	}
+	
 	public void resetGridsize() {
 		gridsize = Math.min(getHeight(), getWidth()) / 8;
 	}
