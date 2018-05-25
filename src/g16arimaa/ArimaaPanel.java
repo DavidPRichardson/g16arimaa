@@ -75,8 +75,15 @@ public class ArimaaPanel extends JPanel {
 		}
 		return null;
 	}
-	
-	public void move(Piece piece, int moved_xgrid, int moved_ygrid) {
+	/**
+	 * try to move with the given parameters.
+	 * Return true if a piece was moved, false otherwise.
+	 * @param piece
+	 * @param moved_xgrid
+	 * @param moved_ygrid
+	 * @return
+	 */
+	public boolean move(Piece piece, int moved_xgrid, int moved_ygrid) {
 		if(Math.abs(moved_xgrid-piece.getX())+Math.abs(moved_ygrid-piece.getY())==1) {
 			if(checkMove(piece) && getPiece(moved_xgrid,moved_ygrid) == null){
 				piece.setX(moved_xgrid);
@@ -85,19 +92,23 @@ public class ArimaaPanel extends JPanel {
 					pieces.remove(piece);
 				}
 				repaint();
+				return true;
 			}
 			else {
 				if(!checkMove(piece)) {
 					System.out.println("it is freezed");
+					return false;
 				}
 				else {
 					System.out.println("There is piece on the place");
+					return false;
 				}
 				
 			}
 		}
 		else {
 			System.out.println("it is not next to the piece");
+			return false;
 		}
 		
 	}
