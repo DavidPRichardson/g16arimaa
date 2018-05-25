@@ -17,6 +17,11 @@ public class ArimaaPanel extends JPanel {
 	final int TRAP=3;
 	final int TRAP_WITH_GOLD = 4;
 	final int TRAP_WITH_SILVER = 5;
+	final int STRONG_ENEMY=1;
+	final int FRIEND=2;
+	
+	boolean strong_enemy;
+	boolean friend;
 	
 	ArrayList<Piece> pieces = new ArrayList<Piece>();
 	
@@ -96,6 +101,49 @@ public class ArimaaPanel extends JPanel {
 			}
 		}
 		return null;
+	}
+	
+	public void move(Piece piece, int moved_xgrid, int moved_ygrid) {
+		if(checkMove(piece) && getPiece(moved_xgrid,moved_ygrid) == null){
+			piece.setX(moved_xgrid);
+			piece.setY(moved_ygrid);
+		}
+		else {
+			System.out.println("It cannot move to the place.");
+		}
+	}
+	
+	public boolean checkMove(Piece piece) {
+		int x=piece.getX();
+		int y=piece.getY();
+		strong_enemy=false;
+		friend=false;
+		check_enemy_and_friend(x-1,y,piece.getStrength(),piece.getColor());
+		check_enemy_and_friend(x+1,y,piece.getStrength(),piece.getColor());
+		check_enemy_and_friend(x,y-1,piece.getStrength(),piece.getColor());
+		check_enemy_and_friend(x,y+1,piece.getStrength(),piece.getColor());
+		
+		if(strong_enemy==false) {
+			return true;
+		}
+		else if(strong_enemy==true && friend==true) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public void check_enemy_and_friend(int x, int y, int strength,int color) {
+		if(x>=0&&x<=7&&y>=0&&y<=7) {
+			Piece piece = getPiece(x,y);
+			if(piece.getStrength()>strength&&piece.getColor()!=color) {
+				strong_enemy=true;
+			}
+			else if(piece.getColor()==color) {
+				friend=true;
+			}
+		}
+		
 	}
 }
 
