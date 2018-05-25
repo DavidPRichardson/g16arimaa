@@ -86,5 +86,19 @@ public class ArimaaPanel extends JPanel {
 	public ArrayList<Piece> getPieces() {
 		return pieces;
 	}
+	/**
+	 * Returns the piece at the given square
+	 * @param xgrid
+	 * @param ygrid
+	 * @return
+	 */
+	public Piece pieceAtSquare(int xgrid, int ygrid) {
+		for (int i = 0; i < getPieces().size(); i++) {
+			if(getPieces().get(i).getX() == xgrid && getPieces().get(i).getY() == ygrid) {
+				return getPieces().get(i);
+			}
+		}
+		return null;
+	}
 }
 

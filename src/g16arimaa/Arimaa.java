@@ -136,7 +136,7 @@ public class Arimaa implements ActionListener, MouseListener {
 	public void mouseReleased(MouseEvent e) {
 		int ygrid = e.getY() / panel.getGridsize();
 		int xgrid = e.getX() / panel.getGridsize();
-		if (placementphase && !isSquareEmpty(xgrid, ygrid)) {
+		if (placementphase && panel.pieceAtSquare(xgrid, ygrid) == null) {//add pieces to the grid
 			if (turn == GOLD && ygrid > 5) {
 				switch (piecetobeplaced) {
 				case RABBIT:
@@ -275,14 +275,5 @@ public class Arimaa implements ActionListener, MouseListener {
 		} else {
 			return false;
 		}
-	}
-	
-	public boolean isSquareEmpty(int xgrid, int ygrid) {
-		for (int i = 0; i < panel.getPieces().size(); i++) {
-			if(panel.getPieces().get(i).getX() == xgrid && panel.getPieces().get(i).getY() == ygrid) {
-				return true;
-			}
-		}
-		return false;
 	}
 }
