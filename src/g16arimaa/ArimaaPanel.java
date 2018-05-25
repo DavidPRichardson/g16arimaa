@@ -10,13 +10,7 @@ public class ArimaaPanel extends JPanel {
 
 	int gridsize;//this should mostly be kept constant
 	
-	int[][] board = new int[8][8];//[rows][columns]
-	final int NONE=0;
-	final int GOLD_PIECE=1;
-	final int SILVER_PIECE=2;
-	final int TRAP=3;
-	final int TRAP_WITH_GOLD = 4;
-	final int TRAP_WITH_SILVER = 5;
+	boolean[][] trap = new boolean[8][8];//[rows][columns]
 	final int STRONG_ENEMY=1;
 	final int FRIEND=2;
 	
@@ -27,19 +21,19 @@ public class ArimaaPanel extends JPanel {
 	
 	public ArimaaPanel() {
 		super();
-		board[2][2]=TRAP;
-		board[5][2]=TRAP;
-		board[2][5]=TRAP;
-		board[5][5]=TRAP;
+		trap[2][2]=true;
+		trap[2][5]=true;
+		trap[5][5]=true;
+		trap[5][2]=true;
 	}
 	
 	public void paintComponent(Graphics g) {
 		resetGridsize();
 		super.paintComponent(g);
 		//paintBoards
-		for (int j = 0; j < board.length; j++) {//go through rows
-			for (int i = 0; i < board[0].length; i++) {//go though columns
-				if(board[j][i]>=TRAP) {
+		for (int j = 0; j < trap.length; j++) {//go through rows
+			for (int i = 0; i < trap[0].length; i++) {//go though columns
+				if(trap[j][i]) {
 					g.setColor(Color.RED);
 				}
 				else if((i+j)%2==0) {
@@ -64,27 +58,6 @@ public class ArimaaPanel extends JPanel {
 		return gridsize;
 	}
 	
-	public int[][] getBoard() {
-		return board;
-	}
-	/**
-	 * return the value of the square at the given position
-	 * @param y
-	 * @param x
-	 * @return
-	 */
-	public int getBoardSquare(int y, int x) {
-		return board[y][x];
-	}
-	/**
-	 * set the given square to the given value
-	 * @param y
-	 * @param x
-	 * @param value
-	 */
-	public void setBoardSquare(int y, int x, int value) {
-		board[y][x] = value;
-	}
 	public void addPiece(Piece p) {
 		pieces.add(p);
 	}
@@ -142,7 +115,10 @@ public class ArimaaPanel extends JPanel {
 			else if(piece.getColor()==color) {
 				friend=true;
 			}
-		}
+		}	
+	}
+	
+	public void checktrap(int x, int y){
 		
 	}
 }
