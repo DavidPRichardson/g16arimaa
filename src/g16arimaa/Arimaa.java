@@ -288,11 +288,16 @@ public class Arimaa implements ActionListener, MouseListener {
 					frame.revalidate();
 				}
 			}
-		} else if(!placementphase && selectedpiece == null) {
-			selectedpiece = panel.getPiece(xgrid, ygrid);
+			//this is the actual game portion
 		} else if(!placementphase) {
-			//move the piece
-			panel.move(selectedpiece, xgrid, ygrid);
+			if(selectedpiece == null) {//if no piece is selected, select a new piece
+				selectedpiece = panel.getPiece(xgrid, ygrid);
+			} else if(panel.getPiece(xgrid, ygrid) != null && selectedpiece != null) {//if there is a selected piece, but the user clicks a different piece, select that piece
+				selectedpiece = panel.getPiece(xgrid, ygrid);
+			} else{
+				//move the piece
+				panel.move(selectedpiece, xgrid, ygrid);
+			}
 		}
 	}
 
