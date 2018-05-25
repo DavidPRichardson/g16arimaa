@@ -1,6 +1,7 @@
 package g16arimaa;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -23,10 +24,10 @@ public class Arimaa implements ActionListener, MouseListener {
 	JFrame frame = new JFrame("Arimaa");
 	ArimaaPanel panel = new ArimaaPanel();
 	Container east = new Container();
-	JLabel turnlabel = new JLabel("Turn");
+	JLabel turnlabel = new JLabel("Turn:");
 	JLabel silverturnlabel = new JLabel("Silver");
 	JLabel goldturnlabel = new JLabel("Gold");
-	JLabel movesleftlabel = new JLabel("Moves:");
+	JLabel movesleftlabel = new JLabel("Place Pieces!");
 	JButton pushbutton = new JButton("Push");
 	JButton pullbutton = new JButton("Pull");
 	JButton restartbutton = new JButton("Restart");
@@ -56,6 +57,8 @@ public class Arimaa implements ActionListener, MouseListener {
 	int piecetobeplaced;
 
 	boolean placementphase = true;
+	
+	Piece selectedpiece = null;
 
 	final int GOLD = 1;
 	final int SILVER = 2;
@@ -73,8 +76,8 @@ public class Arimaa implements ActionListener, MouseListener {
 		east.setLayout(new GridLayout(5, 2));
 		east.add(turnlabel);
 		east.add(new JLabel(""));// empty for formating
-		east.add(silverturnlabel);
 		east.add(goldturnlabel);
+		east.add(silverturnlabel);
 		east.add(movesleftlabel);
 		east.add(new JLabel(""));// empty for formating
 		east.add(pushbutton);
@@ -85,6 +88,10 @@ public class Arimaa implements ActionListener, MouseListener {
 		restartbutton.addActionListener(this);
 		east.add(skipbutton);
 		skipbutton.addActionListener(this);
+		
+		goldturnlabel.setForeground(Color.GREEN);
+		silverturnlabel.setForeground(Color.RED);
+		
 		frame.add(east, BorderLayout.EAST);
 
 		south.setLayout(new GridLayout(1, 6));
@@ -100,6 +107,14 @@ public class Arimaa implements ActionListener, MouseListener {
 		placecamel.addActionListener(this);
 		south.add(placeelephant);
 		placeelephant.addActionListener(this);
+		
+		placerabbit.setBackground(Color.GREEN);
+		placecat.setBackground(Color.GREEN);
+		placedog.setBackground(Color.GREEN);
+		placehorse.setBackground(Color.GREEN);
+		placecamel.setBackground(Color.GREEN);
+		placeelephant.setBackground(Color.GREEN);
+		
 		frame.add(south, BorderLayout.SOUTH);
 
 		panel.addMouseListener(this);
@@ -143,36 +158,50 @@ public class Arimaa implements ActionListener, MouseListener {
 					if (rabbitsleft > 0) {
 						panel.addPiece(new Rabbit(xgrid, ygrid, GOLD));
 						rabbitsleft--;
+						if (rabbitsleft == 0) {
+							placerabbit.setBackground(Color.RED);
+						}
 					}
 					break;
 				case CAT:
 					if (catsleft > 0) {
 						panel.addPiece(new Cat(xgrid, ygrid, GOLD));
 						catsleft--;
+						if (catsleft == 0) {
+							placecat.setBackground(Color.RED);
+						}
 					}
 					break;
 				case DOG:
 					if (dogsleft > 0) {
 						panel.addPiece(new Dog(xgrid, ygrid, GOLD));
 						dogsleft--;
+						if (dogsleft == 0) {
+							placedog.setBackground(Color.RED);
+						}
 					}
 					break;
 				case HORSE:
 					if (horsesleft > 0) {
 						panel.addPiece(new Horse(xgrid, ygrid, GOLD));
 						horsesleft--;
+						if (horsesleft == 0) {
+							placehorse.setBackground(Color.RED);
+						}
 					}
 					break;
 				case CAMEL:
 					if (camelsleft > 0) {
 						panel.addPiece(new Camel(xgrid, ygrid, GOLD));
 						camelsleft--;
+						placecamel.setBackground(Color.RED);
 					}
 					break;
 				case ELEPHANT:
 					if (elephantsleft > 0) {
 						panel.addPiece(new Elephant(xgrid, ygrid, GOLD));
 						elephantsleft--;
+						placeelephant.setBackground(Color.RED);
 					}
 					break;
 
@@ -182,6 +211,14 @@ public class Arimaa implements ActionListener, MouseListener {
 				panel.repaint();
 				if(endplacementturn()) {
 					turn = SILVER;
+					placerabbit.setBackground(Color.GREEN);
+					placecat.setBackground(Color.GREEN);
+					placedog.setBackground(Color.GREEN);
+					placehorse.setBackground(Color.GREEN);
+					placecamel.setBackground(Color.GREEN);
+					placeelephant.setBackground(Color.GREEN);
+					goldturnlabel.setForeground(Color.RED);
+					silverturnlabel.setForeground(Color.GREEN);
 				}
 			}
 			if (turn == SILVER && ygrid < 2) {
@@ -190,36 +227,50 @@ public class Arimaa implements ActionListener, MouseListener {
 					if (rabbitsleft > 0) {
 						panel.addPiece(new Rabbit(xgrid, ygrid, SILVER));
 						rabbitsleft--;
+						if (rabbitsleft == 0) {
+							placerabbit.setBackground(Color.RED);
+						}
 					}
 					break;
 				case CAT:
 					if (catsleft > 0) {
 						panel.addPiece(new Cat(xgrid, ygrid, SILVER));
 						catsleft--;
+						if (catsleft == 0) {
+							placecat.setBackground(Color.RED);
+						}
 					}
 					break;
 				case DOG:
 					if (dogsleft > 0) {
 						panel.addPiece(new Dog(xgrid, ygrid, SILVER));
 						dogsleft--;
+						if (dogsleft == 0) {
+							placedog.setBackground(Color.RED);
+						}
 					}
 					break;
 				case HORSE:
 					if (horsesleft > 0) {
 						panel.addPiece(new Horse(xgrid, ygrid, SILVER));
 						horsesleft--;
+						if (horsesleft == 0) {
+							placehorse.setBackground(Color.RED);
+						}
 					}
 					break;
 				case CAMEL:
 					if (camelsleft > 0) {
 						panel.addPiece(new Camel(xgrid, ygrid, SILVER));
 						camelsleft--;
+						placecamel.setBackground(Color.RED);
 					}
 					break;
 				case ELEPHANT:
 					if (elephantsleft > 0) {
 						panel.addPiece(new Elephant(xgrid, ygrid, SILVER));
 						elephantsleft--;
+						placeelephant.setBackground(Color.RED);
 					}
 					break;
 
@@ -229,9 +280,18 @@ public class Arimaa implements ActionListener, MouseListener {
 				panel.repaint();
 				if(endplacementturn()) {
 					turn = GOLD;
+					goldturnlabel.setForeground(Color.GREEN);
+					silverturnlabel.setForeground(Color.RED);
 					placementphase = false;
+					movesleftlabel.setText("Moves left: 4");
+					frame.remove(south);
+					frame.revalidate();
 				}
 			}
+		} else if(!placementphase && selectedpiece == null) {
+			selectedpiece = panel.getPiece(xgrid, ygrid);
+		} else if(!placementphase) {
+			
 		}
 	}
 
