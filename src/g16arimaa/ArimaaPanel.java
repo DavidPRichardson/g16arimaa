@@ -51,16 +51,6 @@ public class ArimaaPanel extends JPanel {
 		}
 	}
 	
-	public Piece getPiece(int x, int y) {
-		for (int i = 0; i < pieces.size(); i++) {
-			if(x>pieces.get(i).getX()-gridsize && x<pieces.get(i).getX()+gridsize
-					&& y>pieces.get(i).getY()-gridsize && y<pieces.get(i).getY()+gridsize) {
-				return pieces.get(i);
-			}
-		}
-		return null;
-	}
-	
 	public void resetGridsize() {
 		gridsize = Math.min(getHeight(), getWidth()) / 8;
 	}
@@ -93,19 +83,16 @@ public class ArimaaPanel extends JPanel {
 	public void addPiece(Piece p) {
 		pieces.add(p);
 	}
-	public ArrayList<Piece> getPieces() {
-		return pieces;
-	}
 	/**
 	 * Returns the piece at the given square
 	 * @param xgrid
 	 * @param ygrid
 	 * @return
 	 */
-	public Piece pieceAtSquare(int xgrid, int ygrid) {
-		for (int i = 0; i < getPieces().size(); i++) {
-			if(getPieces().get(i).getX() == xgrid && getPieces().get(i).getY() == ygrid) {
-				return getPieces().get(i);
+	public Piece getPiece(int xgrid, int ygrid) {
+		for (int i = 0; i < pieces.size(); i++) {
+			if(pieces.get(i).getX() == xgrid && pieces.get(i).getY() == ygrid) {
+				return pieces.get(i);
 			}
 		}
 		return null;
