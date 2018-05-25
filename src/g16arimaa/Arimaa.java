@@ -152,7 +152,7 @@ public class Arimaa implements ActionListener, MouseListener {
 		int ygrid = e.getY() / panel.getGridsize();
 		int xgrid = e.getX() / panel.getGridsize();
 		if (placementphase && panel.getPiece(xgrid, ygrid) == null  && xgrid < 8) {//add pieces to the grid
-			if (turn == GOLD && ygrid > 5) {//based on the piece the user wants to place, determine whether they can, in fact, place it at the given square
+			if (turn == GOLD && (ygrid == 6 || ygrid == 7)) {//based on the piece the user wants to place, determine whether they can, in fact, place it at the given square
 				switch (piecetobeplaced) {
 				case RABBIT:
 					if (rabbitsleft > 0) {
@@ -221,7 +221,7 @@ public class Arimaa implements ActionListener, MouseListener {
 					silverturnlabel.setForeground(Color.GREEN);
 				}
 			}
-			if (turn == SILVER && ygrid < 2) {
+			if (turn == SILVER && (ygrid == 0 || ygrid == 1)) {
 				switch (piecetobeplaced) {
 				case RABBIT:
 					if (rabbitsleft > 0) {
@@ -294,7 +294,7 @@ public class Arimaa implements ActionListener, MouseListener {
 				selectedpiece = panel.getPiece(xgrid, ygrid);
 			} else if(panel.getPiece(xgrid, ygrid) != null && selectedpiece != null && panel.getPiece(xgrid, ygrid).getColor() == turn) {//if there is a selected piece, but the user clicks a different piece, select that piece
 				selectedpiece = panel.getPiece(xgrid, ygrid);
-			} else{
+			} else if(panel.getPiece(xgrid, ygrid) == null){
 				//move the piece
 				panel.move(selectedpiece, xgrid, ygrid);
 			}
