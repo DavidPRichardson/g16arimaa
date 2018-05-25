@@ -105,21 +105,25 @@ public class ArimaaPanel extends JPanel {
 	public boolean checkMove(Piece piece) {
 		int x=piece.getX();
 		int y=piece.getY();
-		strong_enemy=false;
-		friend=false;
-		check_enemy_and_friend(x-1,y,piece.getStrength(),piece.getColor());
-		check_enemy_and_friend(x+1,y,piece.getStrength(),piece.getColor());
-		check_enemy_and_friend(x,y-1,piece.getStrength(),piece.getColor());
-		check_enemy_and_friend(x,y+1,piece.getStrength(),piece.getColor());
-		
-		if(strong_enemy==false) {
-			return true;
+		if(x>=0&&x<=7&&y>=0&&y<=7) {
+			strong_enemy=false;
+			friend=false;
+			check_enemy_and_friend(x-1,y,piece.getStrength(),piece.getColor());
+			check_enemy_and_friend(x+1,y,piece.getStrength(),piece.getColor());
+			check_enemy_and_friend(x,y-1,piece.getStrength(),piece.getColor());
+			check_enemy_and_friend(x,y+1,piece.getStrength(),piece.getColor());
+			
+			if(strong_enemy==false) {
+				return true;
+			}
+			else if(strong_enemy==true && friend==true) {
+				return true;
+			}
+			return false;
 		}
-		else if(strong_enemy==true && friend==true) {
-			return true;
+		else {
+			return false;
 		}
-		
-		return false;
 	}
 	
 	public void check_enemy_and_friend(int x, int y, int strength,int color) {
