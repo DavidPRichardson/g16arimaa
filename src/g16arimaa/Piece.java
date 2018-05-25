@@ -53,6 +53,10 @@ public class Piece {
 		isPresent=false;
 	}
 	
+	public int getColor() {
+		return color;
+	}
+	
 	
 
 }
