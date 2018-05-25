@@ -75,6 +75,7 @@ public class ArimaaPanel extends JPanel {
 		}
 		return null;
 	}
+<<<<<<< HEAD
 	/**
 	 * try to move with the given parameters.
 	 * Return true if a piece was moved, false otherwise.
@@ -102,38 +103,70 @@ public class ArimaaPanel extends JPanel {
 				else {
 					System.out.println("There is piece on the place");
 					return false;
+=======
+	
+	public void move(Piece piece, int moved_xgrid, int moved_ygrid, boolean checkFreeze) {//checkFreeze stores if it needs to check freezing
+		if(moved_xgrid>=0&&moved_xgrid<=7&&moved_ygrid>=0&&moved_ygrid<=7) {
+			if(Math.abs(moved_xgrid-piece.getX())+Math.abs(moved_ygrid-piece.getY())==1) {
+				if(checkMove(piece,checkFreeze) && getPiece(moved_xgrid,moved_ygrid) == null){
+					piece.setX(moved_xgrid);
+					piece.setY(moved_ygrid);
+					if(checktrap(piece.getX(),piece.getY(),piece.getColor())) {
+						pieces.remove(piece);
+					}
+					repaint();
 				}
-				
+				else {
+					if(!checkMove(piece,checkFreeze)) {
+						System.out.println("it is freezed");
+					}
+					else {
+						System.out.println("There is piece on the place");
+					}
+					
+>>>>>>> d05b5886e8c7bdecb5108be46f4d46f7a08e852d
+				}
 			}
+<<<<<<< HEAD
 		}
 		else {
 			System.out.println("it is not next to the piece");
 			return false;
+=======
+			else {
+				System.out.println("it is not next to the piece");
+			}
+>>>>>>> d05b5886e8c7bdecb5108be46f4d46f7a08e852d
 		}
 		
 	}
 	
-	public boolean checkMove(Piece piece) {
-		int x=piece.getX();
-		int y=piece.getY();
-		if(x>=0&&x<=7&&y>=0&&y<=7) {
-			strong_enemy=false;
-			friend=false;
-			check_enemy_and_friend(x-1,y,piece.getStrength(),piece.getColor());
-			check_enemy_and_friend(x+1,y,piece.getStrength(),piece.getColor());
-			check_enemy_and_friend(x,y-1,piece.getStrength(),piece.getColor());
-			check_enemy_and_friend(x,y+1,piece.getStrength(),piece.getColor());
-			
-			if(strong_enemy==false) {
-				return true;
+	public boolean checkMove(Piece piece,boolean check) {
+		if(check) {
+			int x=piece.getX();
+			int y=piece.getY();
+			if(x>=0&&x<=7&&y>=0&&y<=7) {
+				strong_enemy=false;
+				friend=false;
+				check_enemy_and_friend(x-1,y,piece.getStrength(),piece.getColor());
+				check_enemy_and_friend(x+1,y,piece.getStrength(),piece.getColor());
+				check_enemy_and_friend(x,y-1,piece.getStrength(),piece.getColor());
+				check_enemy_and_friend(x,y+1,piece.getStrength(),piece.getColor());
+				
+				if(strong_enemy==false) {
+					return true;
+				}
+				else if(strong_enemy==true && friend==true) {
+					return true;
+				}
+				return false;
 			}
-			else if(strong_enemy==true && friend==true) {
-				return true;
+			else {
+				return false;
 			}
-			return false;
 		}
 		else {
-			return false;
+			return true;
 		}
 	}
 	
@@ -167,5 +200,24 @@ public class ArimaaPanel extends JPanel {
 		}
 		return false;
 	}
+	
+	public void push(Piece my_piece, Piece enemy_piece, int pushed_xgrid,int pushed_ygrid) {
+		if(my_piece.getColor()!=enemy_piece.getColor()&&my_piece.getStrength()>enemy_piece.getStrength()) {//check color and strength
+			int moved_xgrid=enemy_piece.getX();
+			int moved_ygrid=enemy_piece.getY();//store the place that mypiece wants to move
+			move(enemy_piece,pushed_xgrid,pushed_ygrid,false);
+			if(getPiece(moved_xgrid,moved_ygrid)==null) {
+				//move my piece
+				//need to check if it is freezed??
+			}
+			else {
+				System.out.println("enemy cannot move to the place");
+			}
+		}
+		else {
+			System.out.println("cannot push the piece");
+		}
+	}
+	
 }
 

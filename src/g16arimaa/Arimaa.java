@@ -294,6 +294,7 @@ public class Arimaa implements ActionListener, MouseListener {
 					frame.revalidate();
 				}
 			}
+<<<<<<< HEAD
 			// this is the actual game portion
 		} else if (!placementphase) {
 			if (!push && !pull) {
@@ -319,6 +320,17 @@ public class Arimaa implements ActionListener, MouseListener {
 				}
 			} else if(push) {//conditions for pushing a piece
 				//first, find mypiece
+=======
+			//this is the actual game portion
+		} else if(!placementphase) {
+			if(selectedpiece == null && panel.getPiece(xgrid, ygrid).getColor() == turn) {//if no piece is selected, select a new piece
+				selectedpiece = panel.getPiece(xgrid, ygrid);
+			} else if(panel.getPiece(xgrid, ygrid) != null && selectedpiece != null && panel.getPiece(xgrid, ygrid).getColor() == turn) {//if there is a selected piece, but the user clicks a different piece, select that piece
+				selectedpiece = panel.getPiece(xgrid, ygrid);
+			} else if(panel.getPiece(xgrid, ygrid) == null){
+				//move the piece
+				panel.move(selectedpiece, xgrid, ygrid,true);
+>>>>>>> d05b5886e8c7bdecb5108be46f4d46f7a08e852d
 			}
 		}
 	}
