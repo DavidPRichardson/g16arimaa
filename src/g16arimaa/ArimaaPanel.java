@@ -109,17 +109,20 @@ public class ArimaaPanel extends JPanel {
 	public void check_enemy_and_friend(int x, int y, int strength,int color) {
 		if(x>=0&&x<=7&&y>=0&&y<=7) {
 			Piece piece = getPiece(x,y);
-			if(piece.getStrength()>strength&&piece.getColor()!=color) {
-				strong_enemy=true;
-			}
-			else if(piece.getColor()==color) {
-				friend=true;
+			if(piece!=null) {
+				if(piece.getStrength()>strength&&piece.getColor()!=color) {
+					strong_enemy=true;
+				}
+				else if(piece.getColor()==color) {
+					friend=true;
+				}
 			}
 		}	
 	}
 	
-	public void checktrap(int x, int y){
+	public boolean checktrap(int x, int y){
 		
+		return false;
 	}
 }
 
