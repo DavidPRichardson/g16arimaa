@@ -11,16 +11,15 @@ public class ArimaaPanel extends JPanel {
 	int gridsize;// this should mostly be kept constant
 
 	boolean[][] trap = new boolean[8][8];// [rows][columns]
-	final int STRONG_ENEMY = 1;
-	final int FRIEND = 2;
 
 	boolean strong_enemy;
 	boolean friend;
 
-	ArrayList<Piece> pieces = new ArrayList<Piece>();
+	ArrayList<Piece> pieces = new ArrayList<Piece>();//store all pieces on the board
 
 	public ArimaaPanel() {
 		super();
+		//set traps
 		trap[2][2] = true;
 		trap[2][5] = true;
 		trap[5][5] = true;
@@ -43,7 +42,7 @@ public class ArimaaPanel extends JPanel {
 				g.fillRect(i * gridsize, j * gridsize, gridsize, gridsize);
 			}
 		}
-		for (int i = 0; i < pieces.size(); i++) {
+		for (int i = 0; i < pieces.size(); i++) {//print pieces
 			pieces.get(i).paintPiece(g, gridsize);
 		}
 	}
@@ -56,6 +55,7 @@ public class ArimaaPanel extends JPanel {
 		return gridsize;
 	}
 
+	//add piece to the board
 	public void addPiece(Piece p) {
 		pieces.add(p);
 	}
@@ -119,6 +119,7 @@ public class ArimaaPanel extends JPanel {
 		}
 	}
 
+	//return if it is freezing based on the variable strong_enemy and friend
 	public boolean checkMove(Piece piece, boolean check) {
 		if (check) {
 			int x = piece.getX();
@@ -126,6 +127,7 @@ public class ArimaaPanel extends JPanel {
 			if (x >= 0 && x <= 7 && y >= 0 && y <= 7) {
 				strong_enemy = false;
 				friend = false;
+				//check surrounding
 				check_enemy_and_friend(x - 1, y, piece.getStrength(), piece.getColor());
 				check_enemy_and_friend(x + 1, y, piece.getStrength(), piece.getColor());
 				check_enemy_and_friend(x, y - 1, piece.getStrength(), piece.getColor());
@@ -133,7 +135,7 @@ public class ArimaaPanel extends JPanel {
 
 				if (strong_enemy == false) {
 					return true;
-				} else if (strong_enemy == true && friend == true) {
+				} else if (strong_enemy == true && friend == true) {//freezing is solved
 					return true;
 				}
 				return false;
@@ -145,11 +147,12 @@ public class ArimaaPanel extends JPanel {
 		}
 	}
 
+	//return if there is enemy or friend in the given grid
 	public void check_enemy_and_friend(int x, int y, int strength, int color) {
-		if (x >= 0 && x <= 7 && y >= 0 && y <= 7) {
+		if (x >= 0 && x <= 7 && y >= 0 && y <= 7) {//check if it is in the grid
 			Piece piece = getPiece(x, y);
 			if (piece != null) {
-				if (piece.getStrength() > strength && piece.getColor() != color) {
+				if (piece.getStrength() > strength && piece.getColor() != color) {//check strength and color
 					strong_enemy = true;
 				} else if (piece.getColor() == color) {
 					friend = true;
@@ -158,6 +161,7 @@ public class ArimaaPanel extends JPanel {
 		}
 	}
 
+	//check if the piece will be caught by the trap (check trap and surrounding)
 	public boolean checktrap(int x, int y, int color) {
 		if (trap[x][y]) {
 			friend = false;
@@ -174,44 +178,73 @@ public class ArimaaPanel extends JPanel {
 		return false;
 	}
 
-	public void push(Piece my_piece, Piece enemy_piece, int pushed_xgrid,int pushed_ygrid) {
+	/**
+	 * try to push with the given parameters. Return true if a piece was moved,
+	 * false otherwise.
+	 * 
+	 * @param my_piece
+	 * @param enemy_piece
+	 * @param pushed_xgrid
+	 * @param pushed_ygrid
+	 * @return
+	 */
+	public boolean push(Piece my_piece, Piece enemy_piece, int pushed_xgrid,int pushed_ygrid) {
 		if(my_piece.getColor()!=enemy_piece.getColor()&&my_piece.getStrength()>enemy_piece.getStrength()) {//check color and strength
 			if(checkMove(my_piece,true)) {
 				int moved_xgrid=enemy_piece.getX();
 				int moved_ygrid=enemy_piece.getY();//store the place that mypiece wants to move
-				move(enemy_piece,pushed_xgrid,pushed_ygrid,false);
-				if(getPiece(moved_xgrid,moved_ygrid)==null) {
+				if(move(enemy_piece,pushed_xgrid,pushed_ygrid,false)) {
 					move(my_piece,moved_xgrid,moved_ygrid,false);
+					return true;
 				}
 				else {
 					System.out.println("enemy couldn't move to the place");
+					return false;
 				}
 			}
 			else {
 				System.out.println("my piece is freezed");
+				return false;
 			}
+		}
+		else {
+			System.out.println("my piece cannot push that piece");
+			return false;
 		}
 	}
 	
-	public void pull(Piece my_piece, Piece enemy_piece, int moved_xgrid, int moved_ygrid) {
+	/**
+	 * try to pull with the given parameters. Return true if a piece was moved,
+	 * false otherwise.
+	 * 
+	 * @param my_piece
+	 * @param enemy_piece
+	 * @param moved_xgrid
+	 * @param moved_ygrid
+	 * @return
+	 */
+	public boolean pull(Piece my_piece, Piece enemy_piece, int moved_xgrid, int moved_ygrid) {
 		if(my_piece.getColor()!=enemy_piece.getColor()&&my_piece.getStrength()>enemy_piece.getStrength()) {//check color and strength
 			if(checkMove(my_piece,true)) {
 				int pulled_xgrid=enemy_piece.getX();
 				int pulled_ygrid=enemy_piece.getY();//store the place that enemy piece should move
-				move(my_piece,moved_xgrid,moved_ygrid,false);
-				if(getPiece(pulled_xgrid,pulled_ygrid)==null) {
+				if(move(my_piece,moved_xgrid,moved_ygrid,false)) {
 					move(enemy_piece,pulled_xgrid,pulled_ygrid,false);
+					return true;
 				}
 				else {
 					System.out.println("my piece couldn't move to the place");
+					return false;
 				}
 			}
 			else {
 				System.out.println("my piece is freezed");
+				return false;
 			}
 		}
 		else {
 			System.out.println("cannot push the piece");
+			return false;
 		}
 	}
 
