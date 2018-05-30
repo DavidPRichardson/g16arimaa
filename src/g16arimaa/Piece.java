@@ -6,7 +6,6 @@ import java.awt.Image;
 public class Piece {
 
 	int x,y,strength;
-	boolean isPresent;
 	Image myimage;
 	int color;
 	final int GOLD=1, SILVER=2;
@@ -16,7 +15,6 @@ public class Piece {
 		this.x=x;
 		this.y=y;
 		this.color=color;
-		isPresent=true;
 	}
 	
 	//paint component
@@ -44,17 +42,16 @@ public class Piece {
 	public int getStrength() {
 		return strength;
 	}
-
-	public boolean isPresent() {
-		return isPresent;
-	}
-
-	public void removed() {
-		isPresent=false;
-	}
 	
 	public int getColor() {
 		return color;
+	}
+	
+	public boolean isRabbit() {
+		if(strength==0) {//if rabbit
+			return true;
+		}
+		return false;
 	}
 	
 	
