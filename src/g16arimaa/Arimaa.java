@@ -380,5 +380,6 @@ public class Arimaa implements ActionListener, MouseListener {
 			goldturnlabel.setForeground(Color.GREEN);
 			silverturnlabel.setForeground(Color.RED);
 		}
+		selectedpiece = null;
 	}
 }
