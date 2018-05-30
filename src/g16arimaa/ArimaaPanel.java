@@ -188,22 +188,28 @@ public class ArimaaPanel extends JPanel {
 	 * @param pushed_ygrid
 	 * @return
 	 */
-	public void push(Piece my_piece, Piece enemy_piece, int pushed_xgrid,int pushed_ygrid) {
+	public boolean push(Piece my_piece, Piece enemy_piece, int pushed_xgrid,int pushed_ygrid) {
 		if(my_piece.getColor()!=enemy_piece.getColor()&&my_piece.getStrength()>enemy_piece.getStrength()) {//check color and strength
 			if(checkMove(my_piece,true)) {
 				int moved_xgrid=enemy_piece.getX();
 				int moved_ygrid=enemy_piece.getY();//store the place that mypiece wants to move
-				move(enemy_piece,pushed_xgrid,pushed_ygrid,false);
-				if(getPiece(moved_xgrid,moved_ygrid)==null) {
+				if(move(enemy_piece,pushed_xgrid,pushed_ygrid,false)) {
 					move(my_piece,moved_xgrid,moved_ygrid,false);
+					return true;
 				}
 				else {
 					System.out.println("enemy couldn't move to the place");
+					return false;
 				}
 			}
 			else {
 				System.out.println("my piece is freezed");
+				return false;
 			}
+		}
+		else {
+			System.out.println("my piece cannot push that piece");
+			return false;
 		}
 	}
 	
@@ -217,25 +223,28 @@ public class ArimaaPanel extends JPanel {
 	 * @param moved_ygrid
 	 * @return
 	 */
-	public void pull(Piece my_piece, Piece enemy_piece, int moved_xgrid, int moved_ygrid) {
+	public boolean pull(Piece my_piece, Piece enemy_piece, int moved_xgrid, int moved_ygrid) {
 		if(my_piece.getColor()!=enemy_piece.getColor()&&my_piece.getStrength()>enemy_piece.getStrength()) {//check color and strength
 			if(checkMove(my_piece,true)) {
 				int pulled_xgrid=enemy_piece.getX();
 				int pulled_ygrid=enemy_piece.getY();//store the place that enemy piece should move
-				move(my_piece,moved_xgrid,moved_ygrid,false);
-				if(getPiece(pulled_xgrid,pulled_ygrid)==null) {
+				if(move(my_piece,moved_xgrid,moved_ygrid,false)) {
 					move(enemy_piece,pulled_xgrid,pulled_ygrid,false);
+					return true;
 				}
 				else {
 					System.out.println("my piece couldn't move to the place");
+					return false;
 				}
 			}
 			else {
 				System.out.println("my piece is freezed");
+				return false;
 			}
 		}
 		else {
 			System.out.println("cannot push the piece");
+			return false;
 		}
 	}
 
