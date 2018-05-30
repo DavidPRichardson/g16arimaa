@@ -63,7 +63,7 @@ public class Arimaa implements ActionListener, MouseListener {
 	final int GOLD = 1;
 	final int SILVER = 2;
 	int turn = GOLD;
-
+	
 	int movesleft = 4;
 
 	boolean push = false;
@@ -220,13 +220,15 @@ public class Arimaa implements ActionListener, MouseListener {
 				}
 				panel.repaint();
 				if (endplacementturn()) {
-					changeturn();
+					turn = SILVER;
 					placerabbit.setBackground(Color.GREEN);
 					placecat.setBackground(Color.GREEN);
 					placedog.setBackground(Color.GREEN);
 					placehorse.setBackground(Color.GREEN);
 					placecamel.setBackground(Color.GREEN);
 					placeelephant.setBackground(Color.GREEN);
+					goldturnlabel.setForeground(Color.RED);
+					silverturnlabel.setForeground(Color.GREEN);
 				}
 			}
 			if (turn == SILVER && (ygrid == 0 || ygrid == 1)) {
@@ -287,14 +289,15 @@ public class Arimaa implements ActionListener, MouseListener {
 				}
 				panel.repaint();
 				if (endplacementturn()) {
-					changeturn();
+					turn = GOLD;
+					goldturnlabel.setForeground(Color.GREEN);
+					silverturnlabel.setForeground(Color.RED);
 					placementphase = false;
 					movesleftlabel.setText("Moves left: 4");
 					frame.remove(south);
 					frame.revalidate();
 				}
 			}
-<<<<<<< HEAD
 			// this is the actual game portion
 		} else if (!placementphase) {
 			if (!push && !pull) {
@@ -309,7 +312,7 @@ public class Arimaa implements ActionListener, MouseListener {
 																				// piece
 					selectedpiece = panel.getPiece(xgrid, ygrid);
 				} else if (panel.getPiece(xgrid, ygrid) == null) {// move the piece
-					if (panel.move(selectedpiece, xgrid, ygrid)) {
+					if (panel.move(selectedpiece, xgrid, ygrid, true)) {
 						movesleft--;
 						if (movesleft == 0) {
 							changeturn();
@@ -318,19 +321,8 @@ public class Arimaa implements ActionListener, MouseListener {
 						movesleftlabel.setText("Moves left: " + movesleft);
 					}
 				}
-			} else if(push) {//conditions for pushing a piece
-				//first, find mypiece
-=======
-			//this is the actual game portion
-		} else if(!placementphase) {
-			if(selectedpiece == null && panel.getPiece(xgrid, ygrid).getColor() == turn) {//if no piece is selected, select a new piece
-				selectedpiece = panel.getPiece(xgrid, ygrid);
-			} else if(panel.getPiece(xgrid, ygrid) != null && selectedpiece != null && panel.getPiece(xgrid, ygrid).getColor() == turn) {//if there is a selected piece, but the user clicks a different piece, select that piece
-				selectedpiece = panel.getPiece(xgrid, ygrid);
-			} else if(panel.getPiece(xgrid, ygrid) == null){
-				//move the piece
-				panel.move(selectedpiece, xgrid, ygrid,true);
->>>>>>> d05b5886e8c7bdecb5108be46f4d46f7a08e852d
+			} else if (push) {// conditions for pushing a piece
+				// first, find mypiece
 			}
 		}
 	}
