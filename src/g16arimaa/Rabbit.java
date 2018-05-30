@@ -22,5 +22,18 @@ public class Rabbit extends Piece{
 			e.printStackTrace();
 		}
 	}
+	
+	public boolean possibleMoves(int moved_xgrid,int moved_ygrid) {
+		if(color==GOLD&&moved_ygrid-getY()==1) {
+			return false;
+		}
+		if(color==SILVER&&moved_ygrid-getY()==-1) {
+			return false;
+		}
+		if(Math.abs(moved_xgrid - getX()) + Math.abs(moved_ygrid - getY()) == 1) {
+			return true;
+		}
+		return false;
+	}
 
 }

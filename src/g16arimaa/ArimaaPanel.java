@@ -16,6 +16,7 @@ public class ArimaaPanel extends JPanel {
 	boolean friend;
 
 	ArrayList<Piece> pieces = new ArrayList<Piece>();//store all pieces on the board
+	ArrayList<Piece> rabbits = new ArrayList<Piece>(); //store all rabbits on the board
 
 	public ArimaaPanel() {
 		super();
@@ -58,6 +59,9 @@ public class ArimaaPanel extends JPanel {
 	//add piece to the board
 	public void addPiece(Piece p) {
 		pieces.add(p);
+		if(p.isRabbit()) {
+			rabbits.add(p);
+		}
 	}
 
 	/**
@@ -89,24 +93,27 @@ public class ArimaaPanel extends JPanel {
 																								// needs to check
 																								// freezing
 		if (moved_xgrid >= 0 && moved_xgrid <= 7 && moved_ygrid >= 0 && moved_ygrid <= 7) {
-			if (Math.abs(moved_xgrid - piece.getX()) + Math.abs(moved_ygrid - piece.getY()) == 1) {
-				if (checkMove(piece, checkFreeze) && getPiece(moved_xgrid, moved_ygrid) == null) {
+			if (piece.possibleMoves(moved_xgrid,moved_ygrid)) {
+				if (getPiece(moved_xgrid, moved_ygrid) == null) {
+					if(checkMove(piece, checkFreeze)) {
 					// move
 					piece.setX(moved_xgrid);
 					piece.setY(moved_ygrid);
 					if (checktrap(piece.getX(), piece.getY(), piece.getColor())) {
 						pieces.remove(piece);
+						if(piece.isRabbit()) {
+							rabbits.remove(piece);
+						}
 					}
 					repaint();
 					return true;
-				} else {
-					if (!checkMove(piece, checkFreeze)) {
-						System.out.println("it is freezed");
-						return false;
 					} else {
-						System.out.println("There is piece on the place");
+						System.out.println("It is freezed");
 						return false;
 					}
+				} else {
+					System.out.println("There is piece on the place");
+					return false;
 				}
 			} else {
 				System.out.println("it is not next to the piece");

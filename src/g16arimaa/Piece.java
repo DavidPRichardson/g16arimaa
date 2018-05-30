@@ -54,6 +54,13 @@ public class Piece {
 		return false;
 	}
 	
+	public boolean possibleMoves(int moved_xgrid,int moved_ygrid) {
+		if(Math.abs(moved_xgrid - getX()) + Math.abs(moved_ygrid - getY()) == 1) {
+			return true;
+		}
+		return false;
+	}
+	
 	
 
 }
