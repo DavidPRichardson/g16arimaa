@@ -233,8 +233,8 @@ public class ArimaaPanel extends JPanel {
 	public boolean pull(Piece my_piece, Piece enemy_piece, int moved_xgrid, int moved_ygrid) {
 		if(my_piece.getColor()!=enemy_piece.getColor()&&my_piece.getStrength()>enemy_piece.getStrength()) {//check color and strength
 			if(checkMove(my_piece,true)) {
-				int pulled_xgrid=enemy_piece.getX();
-				int pulled_ygrid=enemy_piece.getY();//store the place that enemy piece should move
+				int pulled_xgrid=my_piece.getX();
+				int pulled_ygrid=my_piece.getY();//store the place that enemy piece should move
 				if(move(my_piece,moved_xgrid,moved_ygrid,false)) {
 					move(enemy_piece,pulled_xgrid,pulled_ygrid,false);
 					return true;

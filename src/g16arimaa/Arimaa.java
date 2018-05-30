@@ -355,6 +355,10 @@ public class Arimaa implements ActionListener, MouseListener {
 							push_otherpiece = null;
 							push_xgrid = -1;
 							push_ygrid = -1;
+							if (movesleft == 0) {
+								changeturn();
+								movesleft = 4;
+							}
 						}
 					}
 				} else if (pull) {// conditions for pushing a piece
@@ -378,6 +382,10 @@ public class Arimaa implements ActionListener, MouseListener {
 							pull_otherpiece = null;
 							pull_xgrid = -1;
 							pull_ygrid = -1;
+							if (movesleft == 0) {
+								changeturn();
+								movesleft = 4;
+							}
 						}
 					}
 				}
