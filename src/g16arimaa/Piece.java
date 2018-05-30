@@ -21,7 +21,7 @@ public class Piece {
 	
 	//paint component
 	public void paintPiece(Graphics g, int gridsize) {
-		g.drawImage(myimage,(int)x*gridsize,y*gridsize,null);
+		g.drawImage(myimage,(int)x*gridsize + ((gridsize - myimage.getWidth(null)) / 2), y*gridsize + ((gridsize - myimage.getHeight(null)) / 2),null);
 	}
 
 	//getters and setters
