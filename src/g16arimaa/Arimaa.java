@@ -73,6 +73,10 @@ public class Arimaa implements ActionListener, MouseListener {
 	int push_ygrid = -1;
 
 	boolean pull = false;
+	Piece pull_mypiece = null;
+	Piece pull_otherpiece = null;
+	int pull_xgrid = -1;
+	int pull_ygrid = -1;
 
 	public static void main(String args[]) {
 		Arimaa arimaa = new Arimaa();
@@ -128,6 +132,8 @@ public class Arimaa implements ActionListener, MouseListener {
 		frame.add(south, BorderLayout.SOUTH);
 
 		panel.addMouseListener(this);
+		setpush(false);
+		setpull(false);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
@@ -161,7 +167,7 @@ public class Arimaa implements ActionListener, MouseListener {
 	public void mouseReleased(MouseEvent e) {
 		int ygrid = e.getY() / panel.getGridsize();
 		int xgrid = e.getX() / panel.getGridsize();
-		if (xgrid > 0 && xgrid < 8 && ygrid > 0 && ygrid < 8) {
+		if (xgrid >= 0 && xgrid < 8 && ygrid >= 0 && ygrid < 8) {
 			if (placementphase && panel.getPiece(xgrid, ygrid) == null && xgrid < 8) {// add pieces to the grid
 				if (turn == GOLD && (ygrid == 6 || ygrid == 7)) {// based on the piece the user wants to place,
 																	// determine
@@ -337,12 +343,41 @@ public class Arimaa implements ActionListener, MouseListener {
 					} else if (push_xgrid == -1) {
 						push_xgrid = xgrid;
 						push_ygrid = ygrid;
-					} else if (push_mypiece != null && push_otherpiece != null && movesleft > 1) {
+					}
+					if (push_mypiece != null && push_otherpiece != null && movesleft > 1) {
 						// do the push
-						if(panel.push(push_mypiece, push_otherpiece, push_xgrid, push_ygrid)) {
-							//the move was successfully performed
-							movesleft--;
+						if (panel.push(push_mypiece, push_otherpiece, push_xgrid, push_ygrid)) {
+							// the move was successfully performed
+							movesleft -= 2;
 							movesleftlabel.setText("Moves left: " + movesleft);
+							setpush(false);
+							push_mypiece = null;
+							push_otherpiece = null;
+							push_xgrid = -1;
+							push_ygrid = -1;
+						}
+					}
+				} else if (pull) {// conditions for pushing a piece
+					// first, find mypiece
+					if (pull_mypiece == null && panel.getPiece(xgrid, ygrid).getColor() == turn) {
+						pull_mypiece = panel.getPiece(xgrid, ygrid);
+					} else if (pull_otherpiece == null && panel.getPiece(xgrid, ygrid).getColor() != turn) {
+						pull_otherpiece = panel.getPiece(xgrid, ygrid);
+					} else if (pull_xgrid == -1) {
+						pull_xgrid = xgrid;
+						pull_ygrid = ygrid;
+					}
+					if (pull_mypiece != null && pull_otherpiece != null && movesleft > 1) {
+						// do the push
+						if (panel.pull(pull_mypiece, pull_otherpiece, pull_xgrid, pull_ygrid)) {
+							// the move was successfully performed
+							movesleft -= 2;
+							movesleftlabel.setText("Moves left: " + movesleft);
+							setpull(false);
+							pull_mypiece = null;
+							pull_otherpiece = null;
+							pull_xgrid = -1;
+							pull_ygrid = -1;
 						}
 					}
 				}
@@ -371,15 +406,37 @@ public class Arimaa implements ActionListener, MouseListener {
 		if (e.getSource().equals(placeelephant)) {
 			piecetobeplaced = ELEPHANT;
 		}
-		if (e.getSource().equals(pushbutton)) {
-			push = true;
-			push_mypiece = null;
-			push_otherpiece = null;
-			push_xgrid = -1;
-			push_ygrid = -1;
-		}
-		if (e.getSource().equals(pullbutton)) {
-
+		if (!placementphase) {
+			if (e.getSource().equals(pushbutton)) {
+				if (!push) {
+					setpush(true);
+					push_mypiece = null;
+					push_otherpiece = null;
+					push_xgrid = -1;
+					push_ygrid = -1;
+				} else {
+					setpush(false);
+					push_mypiece = null;
+					push_otherpiece = null;
+					push_xgrid = -1;
+					push_ygrid = -1;
+				}
+			}
+			if (e.getSource().equals(pullbutton)) {
+				if (!pull) {
+					setpull(true);
+					pull_mypiece = null;
+					pull_otherpiece = null;
+					pull_xgrid = -1;
+					pull_ygrid = -1;
+				} else {
+					setpull(false);
+					pull_mypiece = null;
+					pull_otherpiece = null;
+					pull_xgrid = -1;
+					pull_ygrid = -1;
+				}
+			}
 		}
 	}
 
@@ -414,5 +471,29 @@ public class Arimaa implements ActionListener, MouseListener {
 			silverturnlabel.setForeground(Color.RED);
 		}
 		selectedpiece = null;
+	}
+
+	public void setpull(boolean b) {
+		if (b) {
+			pull = true;
+			pullbutton.setBackground(Color.GREEN);
+			push = false;
+			pushbutton.setBackground(Color.RED);
+		} else {
+			pull = false;
+			pullbutton.setBackground(Color.RED);
+		}
+	}
+
+	public void setpush(boolean b) {
+		if (b) {
+			push = true;
+			pushbutton.setBackground(Color.GREEN);
+			pull = false;
+			pullbutton.setBackground(Color.RED);
+		} else {
+			push = false;
+			pushbutton.setBackground(Color.RED);
+		}
 	}
 }
