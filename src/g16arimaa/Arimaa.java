@@ -63,12 +63,14 @@ public class Arimaa implements ActionListener, MouseListener {
 	final int GOLD = 1;
 	final int SILVER = 2;
 	int turn = GOLD;
-	
+
 	int movesleft = 4;
 
 	boolean push = false;
 	Piece push_mypiece = null;
 	Piece push_otherpiece = null;
+	int push_xgrid = -1;
+	int push_ygrid = -1;
 
 	boolean pull = false;
 
@@ -159,170 +161,191 @@ public class Arimaa implements ActionListener, MouseListener {
 	public void mouseReleased(MouseEvent e) {
 		int ygrid = e.getY() / panel.getGridsize();
 		int xgrid = e.getX() / panel.getGridsize();
-		if (placementphase && panel.getPiece(xgrid, ygrid) == null && xgrid < 8) {// add pieces to the grid
-			if (turn == GOLD && (ygrid == 6 || ygrid == 7)) {// based on the piece the user wants to place, determine
-																// whether they can, in fact, place it at the given
-																// square
-				switch (piecetobeplaced) {
-				case RABBIT:
-					if (rabbitsleft > 0) {
-						panel.addPiece(new Rabbit(xgrid, ygrid, GOLD));
-						rabbitsleft--;
-						if (rabbitsleft == 0) {
-							placerabbit.setBackground(Color.RED);
+		if (xgrid > 0 && xgrid < 8 && ygrid > 0 && ygrid < 8) {
+			if (placementphase && panel.getPiece(xgrid, ygrid) == null && xgrid < 8) {// add pieces to the grid
+				if (turn == GOLD && (ygrid == 6 || ygrid == 7)) {// based on the piece the user wants to place,
+																	// determine
+																	// whether they can, in fact, place it at the given
+																	// square
+					switch (piecetobeplaced) {
+					case RABBIT:
+						if (rabbitsleft > 0) {
+							panel.addPiece(new Rabbit(xgrid, ygrid, GOLD));
+							rabbitsleft--;
+							if (rabbitsleft == 0) {
+								placerabbit.setBackground(Color.RED);
+							}
 						}
-					}
-					break;
-				case CAT:
-					if (catsleft > 0) {
-						panel.addPiece(new Cat(xgrid, ygrid, GOLD));
-						catsleft--;
-						if (catsleft == 0) {
-							placecat.setBackground(Color.RED);
+						break;
+					case CAT:
+						if (catsleft > 0) {
+							panel.addPiece(new Cat(xgrid, ygrid, GOLD));
+							catsleft--;
+							if (catsleft == 0) {
+								placecat.setBackground(Color.RED);
+							}
 						}
-					}
-					break;
-				case DOG:
-					if (dogsleft > 0) {
-						panel.addPiece(new Dog(xgrid, ygrid, GOLD));
-						dogsleft--;
-						if (dogsleft == 0) {
-							placedog.setBackground(Color.RED);
+						break;
+					case DOG:
+						if (dogsleft > 0) {
+							panel.addPiece(new Dog(xgrid, ygrid, GOLD));
+							dogsleft--;
+							if (dogsleft == 0) {
+								placedog.setBackground(Color.RED);
+							}
 						}
-					}
-					break;
-				case HORSE:
-					if (horsesleft > 0) {
-						panel.addPiece(new Horse(xgrid, ygrid, GOLD));
-						horsesleft--;
-						if (horsesleft == 0) {
-							placehorse.setBackground(Color.RED);
+						break;
+					case HORSE:
+						if (horsesleft > 0) {
+							panel.addPiece(new Horse(xgrid, ygrid, GOLD));
+							horsesleft--;
+							if (horsesleft == 0) {
+								placehorse.setBackground(Color.RED);
+							}
 						}
-					}
-					break;
-				case CAMEL:
-					if (camelsleft > 0) {
-						panel.addPiece(new Camel(xgrid, ygrid, GOLD));
-						camelsleft--;
-						placecamel.setBackground(Color.RED);
-					}
-					break;
-				case ELEPHANT:
-					if (elephantsleft > 0) {
-						panel.addPiece(new Elephant(xgrid, ygrid, GOLD));
-						elephantsleft--;
-						placeelephant.setBackground(Color.RED);
-					}
-					break;
+						break;
+					case CAMEL:
+						if (camelsleft > 0) {
+							panel.addPiece(new Camel(xgrid, ygrid, GOLD));
+							camelsleft--;
+							placecamel.setBackground(Color.RED);
+						}
+						break;
+					case ELEPHANT:
+						if (elephantsleft > 0) {
+							panel.addPiece(new Elephant(xgrid, ygrid, GOLD));
+							elephantsleft--;
+							placeelephant.setBackground(Color.RED);
+						}
+						break;
 
-				default:
-					break;
+					default:
+						break;
+					}
+					panel.repaint();
+					if (endplacementturn()) {
+						turn = SILVER;
+						placerabbit.setBackground(Color.GREEN);
+						placecat.setBackground(Color.GREEN);
+						placedog.setBackground(Color.GREEN);
+						placehorse.setBackground(Color.GREEN);
+						placecamel.setBackground(Color.GREEN);
+						placeelephant.setBackground(Color.GREEN);
+						goldturnlabel.setForeground(Color.RED);
+						silverturnlabel.setForeground(Color.GREEN);
+					}
 				}
-				panel.repaint();
-				if (endplacementturn()) {
-					turn = SILVER;
-					placerabbit.setBackground(Color.GREEN);
-					placecat.setBackground(Color.GREEN);
-					placedog.setBackground(Color.GREEN);
-					placehorse.setBackground(Color.GREEN);
-					placecamel.setBackground(Color.GREEN);
-					placeelephant.setBackground(Color.GREEN);
-					goldturnlabel.setForeground(Color.RED);
-					silverturnlabel.setForeground(Color.GREEN);
-				}
-			}
-			if (turn == SILVER && (ygrid == 0 || ygrid == 1)) {
-				switch (piecetobeplaced) {
-				case RABBIT:
-					if (rabbitsleft > 0) {
-						panel.addPiece(new Rabbit(xgrid, ygrid, SILVER));
-						rabbitsleft--;
-						if (rabbitsleft == 0) {
-							placerabbit.setBackground(Color.RED);
+				if (turn == SILVER && (ygrid == 0 || ygrid == 1)) {
+					switch (piecetobeplaced) {
+					case RABBIT:
+						if (rabbitsleft > 0) {
+							panel.addPiece(new Rabbit(xgrid, ygrid, SILVER));
+							rabbitsleft--;
+							if (rabbitsleft == 0) {
+								placerabbit.setBackground(Color.RED);
+							}
 						}
-					}
-					break;
-				case CAT:
-					if (catsleft > 0) {
-						panel.addPiece(new Cat(xgrid, ygrid, SILVER));
-						catsleft--;
-						if (catsleft == 0) {
-							placecat.setBackground(Color.RED);
+						break;
+					case CAT:
+						if (catsleft > 0) {
+							panel.addPiece(new Cat(xgrid, ygrid, SILVER));
+							catsleft--;
+							if (catsleft == 0) {
+								placecat.setBackground(Color.RED);
+							}
 						}
-					}
-					break;
-				case DOG:
-					if (dogsleft > 0) {
-						panel.addPiece(new Dog(xgrid, ygrid, SILVER));
-						dogsleft--;
-						if (dogsleft == 0) {
-							placedog.setBackground(Color.RED);
+						break;
+					case DOG:
+						if (dogsleft > 0) {
+							panel.addPiece(new Dog(xgrid, ygrid, SILVER));
+							dogsleft--;
+							if (dogsleft == 0) {
+								placedog.setBackground(Color.RED);
+							}
 						}
-					}
-					break;
-				case HORSE:
-					if (horsesleft > 0) {
-						panel.addPiece(new Horse(xgrid, ygrid, SILVER));
-						horsesleft--;
-						if (horsesleft == 0) {
-							placehorse.setBackground(Color.RED);
+						break;
+					case HORSE:
+						if (horsesleft > 0) {
+							panel.addPiece(new Horse(xgrid, ygrid, SILVER));
+							horsesleft--;
+							if (horsesleft == 0) {
+								placehorse.setBackground(Color.RED);
+							}
 						}
-					}
-					break;
-				case CAMEL:
-					if (camelsleft > 0) {
-						panel.addPiece(new Camel(xgrid, ygrid, SILVER));
-						camelsleft--;
-						placecamel.setBackground(Color.RED);
-					}
-					break;
-				case ELEPHANT:
-					if (elephantsleft > 0) {
-						panel.addPiece(new Elephant(xgrid, ygrid, SILVER));
-						elephantsleft--;
-						placeelephant.setBackground(Color.RED);
-					}
-					break;
+						break;
+					case CAMEL:
+						if (camelsleft > 0) {
+							panel.addPiece(new Camel(xgrid, ygrid, SILVER));
+							camelsleft--;
+							placecamel.setBackground(Color.RED);
+						}
+						break;
+					case ELEPHANT:
+						if (elephantsleft > 0) {
+							panel.addPiece(new Elephant(xgrid, ygrid, SILVER));
+							elephantsleft--;
+							placeelephant.setBackground(Color.RED);
+						}
+						break;
 
-				default:
-					break;
-				}
-				panel.repaint();
-				if (endplacementturn()) {
-					turn = GOLD;
-					goldturnlabel.setForeground(Color.GREEN);
-					silverturnlabel.setForeground(Color.RED);
-					placementphase = false;
-					movesleftlabel.setText("Moves left: 4");
-					frame.remove(south);
-					frame.revalidate();
-				}
-			}
-			// this is the actual game portion
-		} else if (!placementphase) {
-			if (!push && !pull) {
-				if (selectedpiece == null && panel.getPiece(xgrid, ygrid).getColor() == turn) {// if no piece is
-																								// selected,
-																								// select a new piece
-					selectedpiece = panel.getPiece(xgrid, ygrid);
-				} else if (panel.getPiece(xgrid, ygrid) != null && selectedpiece != null
-						&& panel.getPiece(xgrid, ygrid).getColor() == turn) {// if there is a selected piece, but the
-																				// user
-																				// clicks a different piece, select that
-																				// piece
-					selectedpiece = panel.getPiece(xgrid, ygrid);
-				} else if (panel.getPiece(xgrid, ygrid) == null) {// move the piece
-					if (panel.move(selectedpiece, xgrid, ygrid, true)) {
-						movesleft--;
-						if (movesleft == 0) {
-							changeturn();
-							movesleft = 4;
-						}
-						movesleftlabel.setText("Moves left: " + movesleft);
+					default:
+						break;
+					}
+					panel.repaint();
+					if (endplacementturn()) {
+						turn = GOLD;
+						goldturnlabel.setForeground(Color.GREEN);
+						silverturnlabel.setForeground(Color.RED);
+						placementphase = false;
+						movesleftlabel.setText("Moves left: 4");
+						frame.remove(south);
+						frame.revalidate();
 					}
 				}
-			} else if (push) {// conditions for pushing a piece
-				// first, find mypiece
+				// this is the actual game portion
+			} else if (!placementphase) {
+				if (!push && !pull) {
+					if (selectedpiece == null && panel.getPiece(xgrid, ygrid).getColor() == turn) {// if no piece is
+																									// selected,
+																									// select a new
+																									// piece
+						selectedpiece = panel.getPiece(xgrid, ygrid);
+					} else if (panel.getPiece(xgrid, ygrid) != null && selectedpiece != null
+							&& panel.getPiece(xgrid, ygrid).getColor() == turn) {// if there is a selected piece, but
+																					// the
+																					// user
+																					// clicks a different piece, select
+																					// that
+																					// piece
+						selectedpiece = panel.getPiece(xgrid, ygrid);
+					} else if (panel.getPiece(xgrid, ygrid) == null) {// move the piece
+						if (panel.move(selectedpiece, xgrid, ygrid, true)) {
+							movesleft--;
+							if (movesleft == 0) {
+								changeturn();
+								movesleft = 4;
+							}
+							movesleftlabel.setText("Moves left: " + movesleft);
+						}
+					}
+				} else if (push) {// conditions for pushing a piece
+					// first, find mypiece
+					if (push_mypiece == null && panel.getPiece(xgrid, ygrid).getColor() == turn) {
+						push_mypiece = panel.getPiece(xgrid, ygrid);
+					} else if (push_otherpiece == null && panel.getPiece(xgrid, ygrid).getColor() != turn) {
+						push_otherpiece = panel.getPiece(xgrid, ygrid);
+					} else if (push_xgrid == -1) {
+						push_xgrid = xgrid;
+						push_ygrid = ygrid;
+					} else if (push_mypiece != null && push_otherpiece != null && movesleft > 1) {
+						// do the push
+						if(panel.push(push_mypiece, push_otherpiece, push_xgrid, push_ygrid)) {
+							//the move was successfully performed
+							movesleft--;
+							movesleftlabel.setText("Moves left: " + movesleft);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -347,6 +370,16 @@ public class Arimaa implements ActionListener, MouseListener {
 		}
 		if (e.getSource().equals(placeelephant)) {
 			piecetobeplaced = ELEPHANT;
+		}
+		if (e.getSource().equals(pushbutton)) {
+			push = true;
+			push_mypiece = null;
+			push_otherpiece = null;
+			push_xgrid = -1;
+			push_ygrid = -1;
+		}
+		if (e.getSource().equals(pullbutton)) {
+
 		}
 	}
 
