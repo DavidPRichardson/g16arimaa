@@ -99,12 +99,7 @@ public class ArimaaPanel extends JPanel {
 					// move
 					piece.setX(moved_xgrid);
 					piece.setY(moved_ygrid);
-					if (checktrap(piece.getX(), piece.getY(), piece.getColor())) {
-						pieces.remove(piece);
-						if(piece.isRabbit()) {
-							rabbits.remove(piece);
-						}
-					}
+					checktrap();
 					repaint();
 					return true;
 					} else {
@@ -167,22 +162,35 @@ public class ArimaaPanel extends JPanel {
 			}
 		}
 	}
-
-	//check if the piece will be caught by the trap (check trap and surrounding)
-	public boolean checktrap(int x, int y, int color) {
-		if (trap[x][y]) {
+	//use trap method to all the traps on the board
+	public void checktrap() {
+		for (int j = 0; j < trap.length; j++) {// go through rows
+			for (int i = 0; i < trap[0].length; i++) {// go though columns
+				if (trap[j][i]) {
+					trap(j,i);
+				}
+			}
+		}
+	}
+	
+	//check a place if there is a piece in the grid, and if it will be removed or not (check friends)
+	public void trap(int x, int y) {
+		Piece piece= getPiece(x,y);
+		if(piece!=null) {
+			int color=piece.getColor();
 			friend = false;
 			check_enemy_and_friend(x - 1, y, 0, color);
 			check_enemy_and_friend(x + 1, y, 0, color);
 			check_enemy_and_friend(x, y - 1, 0, color);
 			check_enemy_and_friend(x, y + 1, 0, color);
-			if (friend) {
-				return false;
-			} else {
-				return true;
+			if (!friend) {
+				pieces.remove(piece);
+				if(piece.isRabbit()) {
+					rabbits.remove(piece);
+				}					
 			}
+			
 		}
-		return false;
 	}
 
 	/**
