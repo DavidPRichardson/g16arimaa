@@ -101,15 +101,7 @@ public class ArimaaPanel extends JPanel {
 					piece.setX(moved_xgrid);
 					piece.setY(moved_ygrid);
 					checktrap();
-					repaint();
-					//check winning and losing
-					if(piece.isRabbit()) {
-						if(((Rabbit)piece).isOtherSide()) {
-							win(piece.getColor());
-						}
-					}
-					
-					
+					repaint();					
 					return true;
 					} else {
 						System.out.println("It is freezed");
@@ -195,19 +187,10 @@ public class ArimaaPanel extends JPanel {
 			if (!friend) {
 				pieces.remove(piece);
 				if(piece.isRabbit()) {
-					checkRabbits(piece.color);
+					rabbitcount[piece.color]--;//decrease the rabbit count
 				}
 			}
 			
-		}
-	}
-
-	//this method is called when a rabbit is removed from the board
-	//Decrease rabbitcount and check losing
-	public void checkRabbits(int color) {
-		rabbitcount[color]--;
-		if(rabbitcount[color]<=0) {
-			win(3-color);//the opponent wins
 		}
 	}
 
@@ -281,9 +264,19 @@ public class ArimaaPanel extends JPanel {
 		}
 	}
 	
-	//win method with color
-	public void win(int color) {
-		System.out.println(color+"won!");
+	//check win with input (moved piece) and returns the winner color
+	public int checkWin(Piece piece) {
+		//check winning and losing
+		int color=piece.getColor();
+		if(piece.isRabbit()) {
+			if(((Rabbit)piece).isOtherSide()) {
+				return color;
+			}
+		}
+		if(rabbitcount[color]<=0) {
+			return 3-color;//the opponent wins
+		}
+		return 0;
 	}
 
 }
