@@ -14,6 +14,8 @@ public class ArimaaPanel extends JPanel {
 
 	boolean strong_enemy;
 	boolean friend;
+	
+	int[] rabbitcount = new int[3];//gold is 1, and silver is 2
 
 	ArrayList<Piece> pieces = new ArrayList<Piece>();// store all pieces on the board
 	ArrayList<Piece> rabbits = new ArrayList<Piece>(); // store all rabbits on the board
@@ -26,6 +28,9 @@ public class ArimaaPanel extends JPanel {
 		trap[2][5] = true;
 		trap[5][5] = true;
 		trap[5][2] = true;
+		//initialize rabbitcount
+		rabbitcount[1]=8;
+		rabbitcount[2]=8;
 	}
 
 	public void paintComponent(Graphics g) {
@@ -98,13 +103,13 @@ public class ArimaaPanel extends JPanel {
 		if (moved_xgrid >= 0 && moved_xgrid <= 7 && moved_ygrid >= 0 && moved_ygrid <= 7) {
 			if (piece.possibleMoves(moved_xgrid, moved_ygrid)) {
 				if (getPiece(moved_xgrid, moved_ygrid) == null) {
-					if (checkMove(piece, checkFreeze)) {
-						// move
-						piece.setX(moved_xgrid);
-						piece.setY(moved_ygrid);
-						checktrap();
-						repaint();
-						return true;
+					if(checkMove(piece, checkFreeze)) {
+					// move
+					piece.setX(moved_xgrid);
+					piece.setY(moved_ygrid);
+					checktrap();
+					repaint();					
+					return true;
 					} else {
 						System.out.println("It is freezed");
 						return false;
@@ -266,6 +271,21 @@ public class ArimaaPanel extends JPanel {
 			System.out.println("cannot push the piece");
 			return false;
 		}
+	}
+	
+	//check win with input (moved piece) and returns the winner color
+	public int checkWin(Piece piece) {
+		//check winning and losing
+		int color=piece.getColor();
+		if(piece.isRabbit()) {
+			if(((Rabbit)piece).isOtherSide()) {
+				return color;
+			}
+		}
+		if(rabbitcount[color]<=0) {
+			return 3-color;//the opponent wins
+		}
+		return 0;
 	}
 
 	/**

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 public class Arimaa implements ActionListener, MouseListener {
 	Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -25,8 +26,8 @@ public class Arimaa implements ActionListener, MouseListener {
 	ArimaaPanel panel = new ArimaaPanel();
 	Container east = new Container();
 	JLabel turnlabel = new JLabel("Turn:");
-	JLabel silverturnlabel = new JLabel("Silver");
-	JLabel goldturnlabel = new JLabel("Gold");
+	JLabel silverturnlabel = new JLabel("Silver", SwingConstants.CENTER);
+	JLabel goldturnlabel = new JLabel("Gold", SwingConstants.CENTER);
 	JLabel movesleftlabel = new JLabel("Place Pieces!");
 	JButton pushbutton = new JButton("Push");
 	JButton pullbutton = new JButton("Pull");
@@ -91,7 +92,9 @@ public class Arimaa implements ActionListener, MouseListener {
 		east.add(turnlabel);
 		east.add(new JLabel(""));// empty for formating
 		east.add(goldturnlabel);
+		goldturnlabel.setOpaque(true);
 		east.add(silverturnlabel);
+		silverturnlabel.setOpaque(true);
 		east.add(movesleftlabel);
 		east.add(new JLabel(""));// empty for formating
 		east.add(pushbutton);
@@ -103,8 +106,8 @@ public class Arimaa implements ActionListener, MouseListener {
 		east.add(skipbutton);
 		skipbutton.addActionListener(this);
 
-		goldturnlabel.setForeground(Color.GREEN);
-		silverturnlabel.setForeground(Color.RED);
+		goldturnlabel.setBackground(Color.GREEN);
+		silverturnlabel.setBackground(Color.RED);
 
 		frame.add(east, BorderLayout.EAST);
 
@@ -237,8 +240,8 @@ public class Arimaa implements ActionListener, MouseListener {
 						placehorse.setBackground(Color.GREEN);
 						placecamel.setBackground(Color.GREEN);
 						placeelephant.setBackground(Color.GREEN);
-						goldturnlabel.setForeground(Color.RED);
-						silverturnlabel.setForeground(Color.GREEN);
+						goldturnlabel.setBackground(Color.RED);
+						silverturnlabel.setBackground(Color.GREEN);
 					}
 				}
 				if (turn == SILVER && (ygrid == 0 || ygrid == 1)) {
@@ -300,8 +303,8 @@ public class Arimaa implements ActionListener, MouseListener {
 					panel.repaint();
 					if (endplacementturn()) {
 						turn = GOLD;
-						goldturnlabel.setForeground(Color.GREEN);
-						silverturnlabel.setForeground(Color.RED);
+						goldturnlabel.setBackground(Color.GREEN);
+						silverturnlabel.setBackground(Color.RED);
 						placementphase = false;
 						movesleftlabel.setText("Moves left: 4");
 						frame.remove(south);
@@ -461,12 +464,12 @@ public class Arimaa implements ActionListener, MouseListener {
 	public void changeturn() {
 		if (turn == GOLD) {
 			turn = SILVER;
-			goldturnlabel.setForeground(Color.RED);
-			silverturnlabel.setForeground(Color.GREEN);
+			goldturnlabel.setBackground(Color.RED);
+			silverturnlabel.setBackground(Color.GREEN);
 		} else {
 			turn = GOLD;
-			goldturnlabel.setForeground(Color.GREEN);
-			silverturnlabel.setForeground(Color.RED);
+			goldturnlabel.setBackground(Color.GREEN);
+			silverturnlabel.setBackground(Color.RED);
 		}
 		selectedpiece = null;
 		movesleft = 4;

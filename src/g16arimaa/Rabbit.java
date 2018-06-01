@@ -35,5 +35,15 @@ public class Rabbit extends Piece{
 		}
 		return false;
 	}
+	
+	public boolean isOtherSide() {
+		if(color==GOLD&&getY()==0) {
+			return true;
+		}
+		if(color==SILVER&&getY()==7) {
+			return true;
+		}
+		return false;
+	}
 
 }
