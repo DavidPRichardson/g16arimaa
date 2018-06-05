@@ -320,6 +320,7 @@ public class Arimaa implements ActionListener, MouseListener {
 																									// select a new
 																									// piece
 						selectedpiece = panel.getPiece(xgrid, ygrid);
+						panel.clearSelectedSquares();
 						panel.addSelectedSquare(selectedpiece.getX(), selectedpiece.getY());
 					} else if (panel.getPiece(xgrid, ygrid) != null && selectedpiece != null
 							&& panel.getPiece(xgrid, ygrid).getColor() == turn) {// if there is a selected piece, but
@@ -329,6 +330,7 @@ public class Arimaa implements ActionListener, MouseListener {
 																					// that
 																					// piece
 						selectedpiece = panel.getPiece(xgrid, ygrid);
+						panel.clearSelectedSquares();
 						panel.addSelectedSquare(selectedpiece.getX(), selectedpiece.getY());
 					} else if (panel.getPiece(xgrid, ygrid) == null && selectedpiece!=null) {// move the piece
 						if (panel.move(selectedpiece, xgrid, ygrid, true)) {
@@ -352,8 +354,10 @@ public class Arimaa implements ActionListener, MouseListener {
 					// first, find mypiece
 					if (push_mypiece == null && panel.getPiece(xgrid, ygrid).getColor() == turn) {
 						push_mypiece = panel.getPiece(xgrid, ygrid);
+						panel.addSelectedSquare(push_mypiece.getX(), push_mypiece.getY());
 					} else if (push_otherpiece == null && panel.getPiece(xgrid, ygrid).getColor() != turn) {
 						push_otherpiece = panel.getPiece(xgrid, ygrid);
+						panel.addSelectedSquare(push_otherpiece.getX(), push_otherpiece.getY());
 					} else if (push_xgrid == -1) {
 						push_xgrid = xgrid;
 						push_ygrid = ygrid;
@@ -380,8 +384,10 @@ public class Arimaa implements ActionListener, MouseListener {
 					// first, find mypiece
 					if (pull_mypiece == null && panel.getPiece(xgrid, ygrid).getColor() == turn) {
 						pull_mypiece = panel.getPiece(xgrid, ygrid);
+						panel.addSelectedSquare(pull_mypiece.getX(), pull_mypiece.getY());
 					} else if (pull_otherpiece == null && panel.getPiece(xgrid, ygrid).getColor() != turn) {
 						pull_otherpiece = panel.getPiece(xgrid, ygrid);
+						panel.addSelectedSquare(pull_otherpiece.getX(), pull_otherpiece.getY());
 					} else if (pull_xgrid == -1) {
 						pull_xgrid = xgrid;
 						pull_ygrid = ygrid;
@@ -438,6 +444,7 @@ public class Arimaa implements ActionListener, MouseListener {
 					push_otherpiece = null;
 					push_xgrid = -1;
 					push_ygrid = -1;
+					panel.clearSelectedSquares();
 				} else {
 					setpush(false);
 				}
@@ -449,6 +456,7 @@ public class Arimaa implements ActionListener, MouseListener {
 					pull_otherpiece = null;
 					pull_xgrid = -1;
 					pull_ygrid = -1;
+					panel.clearSelectedSquares();
 				} else {
 					setpull(false);
 				}
@@ -522,6 +530,7 @@ public class Arimaa implements ActionListener, MouseListener {
 			pull_otherpiece = null;
 			pull_xgrid = -1;
 			pull_ygrid = -1;
+			panel.clearSelectedSquares();
 		}
 	}
 
@@ -537,6 +546,7 @@ public class Arimaa implements ActionListener, MouseListener {
 			push_otherpiece = null;
 			push_xgrid = -1;
 			push_ygrid = -1;
+			panel.clearSelectedSquares();
 		}
 	}
 	
