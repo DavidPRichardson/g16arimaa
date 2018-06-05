@@ -366,11 +366,11 @@ public class Arimaa implements ActionListener, MouseListener {
 						// do the push
 						if (panel.push(push_mypiece, push_otherpiece, push_xgrid, push_ygrid)) {
 							// the move was successfully performed
-							if(panel.checkWin(selectedpiece)!=0) {//game ends
-								gameEnd(panel.checkWin(selectedpiece));
+							if(panel.checkWin(push_mypiece)!=0) {//game ends
+								gameEnd(panel.checkWin(push_mypiece));
 							}
 							if(panel.checkWin(push_otherpiece)!=0) {//game ends
-								gameEnd(panel.checkWin(selectedpiece));
+								gameEnd(panel.checkWin(push_otherpiece));
 							}
 							movesleft -= 2;
 							movesleftlabel.setText("Moves left: " + movesleft);
@@ -396,11 +396,11 @@ public class Arimaa implements ActionListener, MouseListener {
 						// do the push
 						if (panel.pull(pull_mypiece, pull_otherpiece, pull_xgrid, pull_ygrid)) {
 							// the move was successfully performed
-							if(panel.checkWin(selectedpiece)!=0) {//game ends
-								gameEnd(panel.checkWin(selectedpiece));
+							if(panel.checkWin(pull_mypiece)!=0) {//game ends
+								gameEnd(panel.checkWin(pull_mypiece));
 							}
-							if(panel.checkWin(push_otherpiece)!=0) {//game ends
-								gameEnd(panel.checkWin(selectedpiece));
+							if(panel.checkWin(pull_otherpiece)!=0) {//game ends
+								gameEnd(panel.checkWin(pull_otherpiece));
 							}
 							movesleft -= 2;
 							movesleftlabel.setText("Moves left: " + movesleft);
