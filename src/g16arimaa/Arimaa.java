@@ -332,6 +332,9 @@ public class Arimaa implements ActionListener, MouseListener {
 						panel.addSelectedSquare(selectedpiece.getX(), selectedpiece.getY());
 					} else if (panel.getPiece(xgrid, ygrid) == null && selectedpiece!=null) {// move the piece
 						if (panel.move(selectedpiece, xgrid, ygrid, true)) {
+							if(panel.checkWin(selectedpiece)!=0) {//game ends
+								gameEnd(panel.checkWin(selectedpiece));
+							}
 							movesleft--;
 							panel.clearSelectedSquares();
 							if (movesleft == 0) {
@@ -340,9 +343,6 @@ public class Arimaa implements ActionListener, MouseListener {
 								panel.addSelectedSquare(selectedpiece.getX(), selectedpiece.getY());
 							}
 							movesleftlabel.setText("Moves left: " + movesleft);
-							if(panel.checkWin(selectedpiece)!=0) {//game ends
-								gameEnd(panel.checkWin(selectedpiece));
-							}
 						}
 					}
 					else {
@@ -362,17 +362,17 @@ public class Arimaa implements ActionListener, MouseListener {
 						// do the push
 						if (panel.push(push_mypiece, push_otherpiece, push_xgrid, push_ygrid)) {
 							// the move was successfully performed
-							movesleft -= 2;
-							movesleftlabel.setText("Moves left: " + movesleft);
-							setpush(false);
-							if (movesleft == 0) {
-								changeturn();
-							}
 							if(panel.checkWin(selectedpiece)!=0) {//game ends
 								gameEnd(panel.checkWin(selectedpiece));
 							}
 							if(panel.checkWin(push_otherpiece)!=0) {//game ends
 								gameEnd(panel.checkWin(selectedpiece));
+							}
+							movesleft -= 2;
+							movesleftlabel.setText("Moves left: " + movesleft);
+							setpush(false);
+							if (movesleft == 0) {
+								changeturn();
 							}
 						}
 					}
@@ -390,17 +390,17 @@ public class Arimaa implements ActionListener, MouseListener {
 						// do the push
 						if (panel.pull(pull_mypiece, pull_otherpiece, pull_xgrid, pull_ygrid)) {
 							// the move was successfully performed
-							movesleft -= 2;
-							movesleftlabel.setText("Moves left: " + movesleft);
-							setpull(false);
-							if (movesleft == 0) {
-								changeturn();
-							}
 							if(panel.checkWin(selectedpiece)!=0) {//game ends
 								gameEnd(panel.checkWin(selectedpiece));
 							}
 							if(panel.checkWin(push_otherpiece)!=0) {//game ends
 								gameEnd(panel.checkWin(selectedpiece));
+							}
+							movesleft -= 2;
+							movesleftlabel.setText("Moves left: " + movesleft);
+							setpull(false);
+							if (movesleft == 0) {
+								changeturn();
 							}
 						}
 					}
