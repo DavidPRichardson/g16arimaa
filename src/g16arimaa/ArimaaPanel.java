@@ -93,13 +93,13 @@ public class ArimaaPanel extends JPanel {
 	 * @param moved_ygrid
 	 * @return
 	 */
-	public boolean move(Piece piece, int moved_xgrid, int moved_ygrid, boolean checkFreeze) {// checkFreeze stores if it
+	public boolean move(Piece piece, int moved_xgrid, int moved_ygrid, boolean check) {// check stores if it
 																								// needs to check
-																								// freezing
-		if (moved_xgrid >= 0 && moved_xgrid <= 7 && moved_ygrid >= 0 && moved_ygrid <= 7) {
-			if (piece.possibleMoves(moved_xgrid, moved_ygrid)) {
+																								// freezing and rabbits' moving backward
+		if (moved_xgrid >= 0 && moved_xgrid <= 7 && moved_ygrid >= 0 && moved_ygrid <= 7) {//if it is in grid
+			if (piece.possibleMoves(moved_xgrid, moved_ygrid,check)) {//check possible moves
 				if (getPiece(moved_xgrid, moved_ygrid) == null) {
-					if(checkMove(piece, checkFreeze)) {
+					if(checkMove(piece, check)) {
 					// move
 					piece.setX(moved_xgrid);
 					piece.setY(moved_ygrid);
@@ -115,7 +115,7 @@ public class ArimaaPanel extends JPanel {
 					return false;
 				}
 			} else {
-				System.out.println("it is not next to the piece");
+				System.out.println("it is not next to the piece, or rabbit cannot move backward");
 				return false;
 			}
 
@@ -191,7 +191,7 @@ public class ArimaaPanel extends JPanel {
 			check_enemy_and_friend(x, y + 1, 0, color);
 			if (!friend) {
 				pieces.remove(piece);
-				if (piece.isRabbit()) {
+				if (piece.isRabbit()) {//if rabbit decrease rabbitcount
 					rabbitcount[piece.getColor()]--;
 				}
 			}
@@ -214,11 +214,11 @@ public class ArimaaPanel extends JPanel {
 																													// color
 																													// and
 																													// strength
-			if (checkMove(my_piece, true)) {
+			if (checkMove(my_piece, true)) {//check freezing
 				int moved_xgrid = enemy_piece.getX();
 				int moved_ygrid = enemy_piece.getY();// store the place that mypiece wants to move
-				if (move(enemy_piece, pushed_xgrid, pushed_ygrid, false)) {
-					move(my_piece, moved_xgrid, moved_ygrid, false);
+				if (move(enemy_piece, pushed_xgrid, pushed_ygrid, false)) {//try to move enemy
+					move(my_piece, moved_xgrid, moved_ygrid, false);//move my piece
 					return true;
 				} else {
 					System.out.println("enemy couldn't move to the place");
@@ -249,11 +249,11 @@ public class ArimaaPanel extends JPanel {
 																													// color
 																													// and
 																													// strength
-			if (checkMove(my_piece, true)) {
+			if (checkMove(my_piece, true)) {//check freezing
 				int pulled_xgrid = my_piece.getX();
 				int pulled_ygrid = my_piece.getY();// store the place that enemy piece should move
-				if (move(my_piece, moved_xgrid, moved_ygrid, false)) {
-					move(enemy_piece, pulled_xgrid, pulled_ygrid, false);
+				if (move(my_piece, moved_xgrid, moved_ygrid, false)) {//try to move my piece
+					move(enemy_piece, pulled_xgrid, pulled_ygrid, false);//move enemy
 					return true;
 				} else {
 					System.out.println("my piece couldn't move to the place");
@@ -278,7 +278,6 @@ public class ArimaaPanel extends JPanel {
 				return color;
 			}
 		}
-		System.out.println("rabbitcount"+rabbitcount[color]);
 		if(rabbitcount[color]<=0) {
 			return 3-color;//the opponent wins
 		}
@@ -315,5 +314,12 @@ public class ArimaaPanel extends JPanel {
 			}
 		}
 		return false;
+	}
+	
+	public void reset() {
+		rabbitcount[1]=8;
+		rabbitcount[2]=8;
+		pieces = new ArrayList<Piece>();
+		repaint();
 	}
 }

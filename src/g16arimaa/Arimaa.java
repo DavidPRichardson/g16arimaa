@@ -553,10 +553,10 @@ public class Arimaa implements ActionListener, MouseListener {
 	//game ends with winner
 	public void gameEnd(int winner) {
 		if(winner==GOLD) {
-			System.out.println("gold wins");
+			JOptionPane.showMessageDialog(frame, "Gold won!");
 		}
 		else if(winner == SILVER) {
-			System.out.println("silver wins");
+			JOptionPane.showMessageDialog(frame, "Silver won!");
 		}
 	}
 }
