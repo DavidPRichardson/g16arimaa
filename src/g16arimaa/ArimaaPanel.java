@@ -18,7 +18,6 @@ public class ArimaaPanel extends JPanel {
 	int[] rabbitcount = new int[3];//gold is 1, and silver is 2
 
 	ArrayList<Piece> pieces = new ArrayList<Piece>();// store all pieces on the board
-	ArrayList<Piece> rabbits = new ArrayList<Piece>(); // store all rabbits on the board
 	ArrayList<Square> selectedsquares = new ArrayList<Square>(); // all squares currently selected, to be highlighted
 
 	public ArimaaPanel() {
@@ -67,9 +66,6 @@ public class ArimaaPanel extends JPanel {
 	// add piece to the board
 	public void addPiece(Piece p) {
 		pieces.add(p);
-		if (p.isRabbit()) {
-			rabbits.add(p);
-		}
 	}
 
 	/**
@@ -196,7 +192,7 @@ public class ArimaaPanel extends JPanel {
 			if (!friend) {
 				pieces.remove(piece);
 				if (piece.isRabbit()) {
-					rabbits.remove(piece);
+					rabbitcount[piece.getColor()]--;
 				}
 			}
 
@@ -282,6 +278,7 @@ public class ArimaaPanel extends JPanel {
 				return color;
 			}
 		}
+		System.out.println("rabbitcount"+rabbitcount[color]);
 		if(rabbitcount[color]<=0) {
 			return 3-color;//the opponent wins
 		}
