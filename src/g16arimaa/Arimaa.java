@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
 public class Arimaa implements ActionListener, MouseListener {
@@ -314,7 +315,7 @@ public class Arimaa implements ActionListener, MouseListener {
 				// this is the actual game portion
 			} else if (!placementphase) {
 				if (!push && !pull) {
-					if (selectedpiece == null && panel.getPiece(xgrid, ygrid).getColor() == turn) {// if no piece is
+					if (selectedpiece == null && panel.getPiece(xgrid, ygrid) != null&&panel.getPiece(xgrid, ygrid).getColor() == turn) {// if no piece is
 																									// selected,
 																									// select a new
 																									// piece
@@ -329,7 +330,7 @@ public class Arimaa implements ActionListener, MouseListener {
 																					// piece
 						selectedpiece = panel.getPiece(xgrid, ygrid);
 						panel.addSelectedSquare(selectedpiece.getX(), selectedpiece.getY());
-					} else if (panel.getPiece(xgrid, ygrid) == null) {// move the piece
+					} else if (panel.getPiece(xgrid, ygrid) == null && selectedpiece!=null) {// move the piece
 						if (panel.move(selectedpiece, xgrid, ygrid, true)) {
 							movesleft--;
 							panel.clearSelectedSquares();
@@ -339,7 +340,13 @@ public class Arimaa implements ActionListener, MouseListener {
 								panel.addSelectedSquare(selectedpiece.getX(), selectedpiece.getY());
 							}
 							movesleftlabel.setText("Moves left: " + movesleft);
+							if(panel.checkWin(selectedpiece)!=0) {//game ends
+								gameEnd(panel.checkWin(selectedpiece));
+							}
 						}
+					}
+					else {
+						System.out.println("It is not your turn");
 					}
 				} else if (push) {// conditions for pushing a piece
 					// first, find mypiece
@@ -351,7 +358,7 @@ public class Arimaa implements ActionListener, MouseListener {
 						push_xgrid = xgrid;
 						push_ygrid = ygrid;
 					}
-					if (push_mypiece != null && push_otherpiece != null && movesleft > 1) {
+					if (push_mypiece != null && push_otherpiece != null && push_xgrid!=-1 && push_ygrid!=-1 && movesleft > 1) {
 						// do the push
 						if (panel.push(push_mypiece, push_otherpiece, push_xgrid, push_ygrid)) {
 							// the move was successfully performed
@@ -360,6 +367,12 @@ public class Arimaa implements ActionListener, MouseListener {
 							setpush(false);
 							if (movesleft == 0) {
 								changeturn();
+							}
+							if(panel.checkWin(selectedpiece)!=0) {//game ends
+								gameEnd(panel.checkWin(selectedpiece));
+							}
+							if(panel.checkWin(push_otherpiece)!=0) {//game ends
+								gameEnd(panel.checkWin(selectedpiece));
 							}
 						}
 					}
@@ -373,7 +386,7 @@ public class Arimaa implements ActionListener, MouseListener {
 						pull_xgrid = xgrid;
 						pull_ygrid = ygrid;
 					}
-					if (pull_mypiece != null && pull_otherpiece != null && movesleft > 1) {
+					if (pull_mypiece != null && pull_otherpiece != null && pull_xgrid!=-1 && pull_ygrid!=-1 && movesleft > 1) {
 						// do the push
 						if (panel.pull(pull_mypiece, pull_otherpiece, pull_xgrid, pull_ygrid)) {
 							// the move was successfully performed
@@ -382,6 +395,12 @@ public class Arimaa implements ActionListener, MouseListener {
 							setpull(false);
 							if (movesleft == 0) {
 								changeturn();
+							}
+							if(panel.checkWin(selectedpiece)!=0) {//game ends
+								gameEnd(panel.checkWin(selectedpiece));
+							}
+							if(panel.checkWin(push_otherpiece)!=0) {//game ends
+								gameEnd(panel.checkWin(selectedpiece));
 							}
 						}
 					}
@@ -435,10 +454,25 @@ public class Arimaa implements ActionListener, MouseListener {
 				}
 			}
 		}
-		if (e.getSource().equals(skipbutton)) {
-			changeturn();
-
+		if(e.getSource().equals(skipbutton)) {
+			//if moves left is 4, asks if they cannot move anymore
+			if(movesleft==4) {
+				int answer = JOptionPane.showConfirmDialog(frame, "Do you mean you have no possible moves? (If yes, you will lose)");
+				if(answer == JOptionPane.YES_OPTION) {
+					gameEnd(3-turn);
+				}
+				else {
+					System.out.println("Cancel to skip");
+					//do nothing
+				}
+			}
+			else {
+				changeturn();
+				movesleft=4;
+				movesleftlabel.setText("Moves left: " + movesleft);
+			}
 		}
+		
 	}
 
 	/**
@@ -473,6 +507,7 @@ public class Arimaa implements ActionListener, MouseListener {
 		}
 		selectedpiece = null;
 		movesleft = 4;
+		
 	}
 
 	public void setpull(boolean b) {
@@ -502,6 +537,16 @@ public class Arimaa implements ActionListener, MouseListener {
 			push_otherpiece = null;
 			push_xgrid = -1;
 			push_ygrid = -1;
+		}
+	}
+	
+	//game ends with winner
+	public void gameEnd(int winner) {
+		if(winner==GOLD) {
+			System.out.println("gold wins");
+		}
+		else if(winner == SILVER) {
+			System.out.println("silver wins");
 		}
 	}
 }
