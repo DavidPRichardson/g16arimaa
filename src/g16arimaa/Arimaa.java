@@ -480,7 +480,9 @@ public class Arimaa implements ActionListener, MouseListener {
 				movesleftlabel.setText("Moves left: " + movesleft);
 			}
 		}
-		
+		if(e.getSource().equals(restartbutton)) {
+			restart();
+		}
 	}
 
 	/**
@@ -553,10 +555,58 @@ public class Arimaa implements ActionListener, MouseListener {
 	//game ends with winner
 	public void gameEnd(int winner) {
 		if(winner==GOLD) {
-			JOptionPane.showMessageDialog(frame, "Gold won!");
+			System.out.println("gold wins");
 		}
 		else if(winner == SILVER) {
-			JOptionPane.showMessageDialog(frame, "Silver won!");
+			System.out.println("silver wins");
 		}
+	}
+	/**
+	 * restarts the game
+	 */
+	public void restart() {
+		//see if we need to add the south buttons back.
+		if(!placementphase) {
+			frame.add(south, BorderLayout.SOUTH);
+			frame.revalidate();
+			placerabbit.setBackground(Color.GREEN);
+			placecat.setBackground(Color.GREEN);
+			placedog.setBackground(Color.GREEN);
+			placehorse.setBackground(Color.GREEN);
+			placecamel.setBackground(Color.GREEN);
+			placeelephant.setBackground(Color.GREEN);
+		}
+		frame.revalidate();
+		
+		movesleftlabel.setText("Place Pieces!");
+		//revert to intial declarations
+		rabbitsleft = 8;
+		catsleft = 2;
+		dogsleft = 2;
+		horsesleft = 2;
+		camelsleft = 1;
+		elephantsleft = 1;
+
+		placementphase = true;
+
+		selectedpiece = null;
+
+		turn = GOLD;
+
+		int movesleft = 4;
+
+		push = false;
+		push_mypiece = null;
+		push_otherpiece = null;
+		push_xgrid = -1;
+		push_ygrid = -1;
+
+		pull = false;
+		pull_mypiece = null;
+		pull_otherpiece = null;
+		pull_xgrid = -1;
+		pull_ygrid = -1;
+		
+		panel.reset();
 	}
 }

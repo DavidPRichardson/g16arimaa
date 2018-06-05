@@ -319,7 +319,8 @@ public class ArimaaPanel extends JPanel {
 	public void reset() {
 		rabbitcount[1]=8;
 		rabbitcount[2]=8;
-		pieces = new ArrayList<Piece>();
+		pieces.clear();
+		selectedsquares.clear();
 		repaint();
 	}
 }
