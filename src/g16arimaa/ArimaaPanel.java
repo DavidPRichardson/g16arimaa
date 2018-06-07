@@ -19,6 +19,8 @@ public class ArimaaPanel extends JPanel {
 
 	ArrayList<Piece> pieces = new ArrayList<Piece>();// store all pieces on the board
 	ArrayList<Square> selectedsquares = new ArrayList<Square>(); // all squares currently selected, to be highlighted
+	
+	String message="";
 
 	public ArimaaPanel() {
 		super();
@@ -107,20 +109,20 @@ public class ArimaaPanel extends JPanel {
 					repaint();					
 					return true;
 					} else {
-						System.out.println("It is freezed");
+						message = "It is freezed";
 						return false;
 					}
 				} else {
-					System.out.println("There is piece on the place");
+					message = "There is piece on the place";
 					return false;
 				}
 			} else {
-				System.out.println("it is not next to the piece, or rabbit cannot move backward");
+				message = "It is not next to the piece, or rabbit cannot move backward";
 				return false;
 			}
 
 		} else {
-			System.out.println("the selected square is outside the grid");
+			message = "The selected square is outside the grid";
 			return false;
 		}
 	}
@@ -194,6 +196,7 @@ public class ArimaaPanel extends JPanel {
 				if (piece.isRabbit()) {//if rabbit decrease rabbitcount
 					rabbitcount[piece.getColor()]--;
 				}
+				message="The piece is caught by the trap.";
 			}
 
 		}
@@ -221,15 +224,15 @@ public class ArimaaPanel extends JPanel {
 					move(my_piece, moved_xgrid, moved_ygrid, false);//move my piece
 					return true;
 				} else {
-					System.out.println("enemy couldn't move to the place");
+					message = "Enemy couldn't move to the place";
 					return false;
 				}
 			} else {
-				System.out.println("my piece is freezed");
+				message = "My piece is freezed";
 				return false;
 			}
 		} else {
-			System.out.println("my piece cannot push that piece");
+			message = "Piece can only push weaker enemy piece.";
 			return false;
 		}
 	}
@@ -256,15 +259,15 @@ public class ArimaaPanel extends JPanel {
 					move(enemy_piece, pulled_xgrid, pulled_ygrid, false);//move enemy
 					return true;
 				} else {
-					System.out.println("my piece couldn't move to the place");
+					message = "My piece couldn't move to the place";
 					return false;
 				}
 			} else {
-				System.out.println("my piece is freezed");
+				message = "My piece is freezed";
 				return false;
 			}
 		} else {
-			System.out.println("cannot pull the piece");
+			message = "Piece can only pull weaker enemy piece.";
 			return false;
 		}
 	}
@@ -322,5 +325,15 @@ public class ArimaaPanel extends JPanel {
 		pieces.clear();
 		selectedsquares.clear();
 		repaint();
+	}
+	
+	public String getMessage() {
+		String toReturn = message;
+		message="";
+		return toReturn;
+	}
+	
+	public void setMessage(String message) {
+		this.message=message;
 	}
 }

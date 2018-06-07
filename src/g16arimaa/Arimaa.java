@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -12,11 +13,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+
+import javafx.scene.layout.Border;
 
 public class Arimaa implements ActionListener, MouseListener {
 	Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -29,12 +33,14 @@ public class Arimaa implements ActionListener, MouseListener {
 	JLabel turnlabel = new JLabel("Turn:");
 	JLabel silverturnlabel = new JLabel("Silver", SwingConstants.CENTER);
 	JLabel goldturnlabel = new JLabel("Gold", SwingConstants.CENTER);
-	JLabel movesleftlabel = new JLabel("Place Pieces!");
+	JLabel movesleftlabel = new JLabel("Moves left: ");
+	JLabel messagelabel = new JLabel("Message: Place gold pieces!");
 	JButton pushbutton = new JButton("Push");
 	JButton pullbutton = new JButton("Pull");
 	JButton restartbutton = new JButton("Restart");
 	JButton skipbutton = new JButton("Skip");
 	Container south = new Container();
+	Container placebuttons = new Container();
 	JButton placerabbit = new JButton("rabbit");
 	JButton placecat = new JButton("cat");
 	JButton placedog = new JButton("dog");
@@ -59,6 +65,7 @@ public class Arimaa implements ActionListener, MouseListener {
 	int piecetobeplaced;
 
 	boolean placementphase = true;
+	boolean boardInteraction = true;
 
 	Piece selectedpiece = null;
 
@@ -79,9 +86,11 @@ public class Arimaa implements ActionListener, MouseListener {
 	Piece pull_otherpiece = null;
 	int pull_xgrid = -1;
 	int pull_ygrid = -1;
+	
+	String message;
 
 	public static void main(String args[]) {
-		Arimaa arimaa = new Arimaa();
+		new Arimaa();
 	}
 
 	public Arimaa() {
@@ -89,7 +98,7 @@ public class Arimaa implements ActionListener, MouseListener {
 		frame.setLayout(new BorderLayout());
 		frame.add(panel, BorderLayout.CENTER);
 
-		east.setLayout(new GridLayout(5, 2));
+		east.setLayout(new GridLayout(6, 2));
 		east.add(turnlabel);
 		east.add(new JLabel(""));// empty for formating
 		east.add(goldturnlabel);
@@ -112,19 +121,24 @@ public class Arimaa implements ActionListener, MouseListener {
 
 		frame.add(east, BorderLayout.EAST);
 
-		south.setLayout(new GridLayout(1, 6));
-		south.add(placerabbit);
+		south.setLayout(new GridLayout(2,1));
+		placebuttons.setLayout(new GridLayout(1, 6));
+		placebuttons.add(placerabbit);
 		placerabbit.addActionListener(this);
-		south.add(placecat);
+		placebuttons.add(placecat);
 		placecat.addActionListener(this);
-		south.add(placedog);
+		placebuttons.add(placedog);
 		placedog.addActionListener(this);
-		south.add(placehorse);
+		placebuttons.add(placehorse);
 		placehorse.addActionListener(this);
-		south.add(placecamel);
+		placebuttons.add(placecamel);
 		placecamel.addActionListener(this);
-		south.add(placeelephant);
+		placebuttons.add(placeelephant);
 		placeelephant.addActionListener(this);
+		south.add(placebuttons);
+		south.add(messagelabel);
+		messagelabel.setBorder(BorderFactory.createLineBorder(Color.black));
+		messagelabel.setFont(new Font(messagelabel.getName(), Font.PLAIN, 20));
 
 		placerabbit.setBackground(Color.GREEN);
 		placecat.setBackground(Color.GREEN);
@@ -169,246 +183,273 @@ public class Arimaa implements ActionListener, MouseListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		int ygrid = e.getY() / panel.getGridsize();
-		int xgrid = e.getX() / panel.getGridsize();
-		if (xgrid >= 0 && xgrid < 8 && ygrid >= 0 && ygrid < 8) {
-			if (placementphase && panel.getPiece(xgrid, ygrid) == null && xgrid < 8) {// add pieces to the grid
-				if (turn == GOLD && (ygrid == 6 || ygrid == 7)) {// based on the piece the user wants to place,
-																	// determine
-																	// whether they can, in fact, place it at the given
-																	// square
-					switch (piecetobeplaced) {
-					case RABBIT:
-						if (rabbitsleft > 0) {
-							panel.addPiece(new Rabbit(xgrid, ygrid, GOLD));
-							rabbitsleft--;
-							if (rabbitsleft == 0) {
-								placerabbit.setBackground(Color.RED);
+		if(boardInteraction) {
+			int ygrid = e.getY() / panel.getGridsize();
+			int xgrid = e.getX() / panel.getGridsize();
+			if (xgrid >= 0 && xgrid < 8 && ygrid >= 0 && ygrid < 8) {
+				if (placementphase && panel.getPiece(xgrid, ygrid) == null && xgrid < 8) {// add pieces to the grid
+					if (turn == GOLD && (ygrid == 6 || ygrid == 7)) {// based on the piece the user wants to place,
+																		// determine
+																		// whether they can, in fact, place it at the given
+																		// square
+						switch (piecetobeplaced) {
+						case RABBIT:
+							if (rabbitsleft > 0) {
+								panel.addPiece(new Rabbit(xgrid, ygrid, GOLD));
+								rabbitsleft--;
+								if (rabbitsleft == 0) {
+									placerabbit.setBackground(Color.RED);
+								}
 							}
-						}
-						break;
-					case CAT:
-						if (catsleft > 0) {
-							panel.addPiece(new Cat(xgrid, ygrid, GOLD));
-							catsleft--;
-							if (catsleft == 0) {
-								placecat.setBackground(Color.RED);
+							break;
+						case CAT:
+							if (catsleft > 0) {
+								panel.addPiece(new Cat(xgrid, ygrid, GOLD));
+								catsleft--;
+								if (catsleft == 0) {
+									placecat.setBackground(Color.RED);
+								}
 							}
-						}
-						break;
-					case DOG:
-						if (dogsleft > 0) {
-							panel.addPiece(new Dog(xgrid, ygrid, GOLD));
-							dogsleft--;
-							if (dogsleft == 0) {
-								placedog.setBackground(Color.RED);
+							break;
+						case DOG:
+							if (dogsleft > 0) {
+								panel.addPiece(new Dog(xgrid, ygrid, GOLD));
+								dogsleft--;
+								if (dogsleft == 0) {
+									placedog.setBackground(Color.RED);
+								}
 							}
-						}
-						break;
-					case HORSE:
-						if (horsesleft > 0) {
-							panel.addPiece(new Horse(xgrid, ygrid, GOLD));
-							horsesleft--;
-							if (horsesleft == 0) {
-								placehorse.setBackground(Color.RED);
+							break;
+						case HORSE:
+							if (horsesleft > 0) {
+								panel.addPiece(new Horse(xgrid, ygrid, GOLD));
+								horsesleft--;
+								if (horsesleft == 0) {
+									placehorse.setBackground(Color.RED);
+								}
 							}
+							break;
+						case CAMEL:
+							if (camelsleft > 0) {
+								panel.addPiece(new Camel(xgrid, ygrid, GOLD));
+								camelsleft--;
+								placecamel.setBackground(Color.RED);
+							}
+							break;
+						case ELEPHANT:
+							if (elephantsleft > 0) {
+								panel.addPiece(new Elephant(xgrid, ygrid, GOLD));
+								elephantsleft--;
+								placeelephant.setBackground(Color.RED);
+							}
+							break;
+	
+						default:
+							break;
 						}
-						break;
-					case CAMEL:
-						if (camelsleft > 0) {
-							panel.addPiece(new Camel(xgrid, ygrid, GOLD));
-							camelsleft--;
-							placecamel.setBackground(Color.RED);
+						panel.repaint();
+						if (endplacementturn()) {
+							turn = SILVER;
+							placerabbit.setBackground(Color.GREEN);
+							placecat.setBackground(Color.GREEN);
+							placedog.setBackground(Color.GREEN);
+							placehorse.setBackground(Color.GREEN);
+							placecamel.setBackground(Color.GREEN);
+							placeelephant.setBackground(Color.GREEN);
+							goldturnlabel.setBackground(Color.RED);
+							silverturnlabel.setBackground(Color.GREEN);
+							messagelabel.setText("Message: Place silver pieces!");
 						}
-						break;
-					case ELEPHANT:
-						if (elephantsleft > 0) {
-							panel.addPiece(new Elephant(xgrid, ygrid, GOLD));
-							elephantsleft--;
-							placeelephant.setBackground(Color.RED);
-						}
-						break;
-
-					default:
-						break;
 					}
-					panel.repaint();
-					if (endplacementturn()) {
-						turn = SILVER;
-						placerabbit.setBackground(Color.GREEN);
-						placecat.setBackground(Color.GREEN);
-						placedog.setBackground(Color.GREEN);
-						placehorse.setBackground(Color.GREEN);
-						placecamel.setBackground(Color.GREEN);
-						placeelephant.setBackground(Color.GREEN);
-						goldturnlabel.setBackground(Color.RED);
-						silverturnlabel.setBackground(Color.GREEN);
-					}
-				}
-				if (turn == SILVER && (ygrid == 0 || ygrid == 1)) {
-					switch (piecetobeplaced) {
-					case RABBIT:
-						if (rabbitsleft > 0) {
-							panel.addPiece(new Rabbit(xgrid, ygrid, SILVER));
-							rabbitsleft--;
-							if (rabbitsleft == 0) {
-								placerabbit.setBackground(Color.RED);
+					else if (turn == SILVER && (ygrid == 0 || ygrid == 1)) {
+						switch (piecetobeplaced) {
+						case RABBIT:
+							if (rabbitsleft > 0) {
+								panel.addPiece(new Rabbit(xgrid, ygrid, SILVER));
+								rabbitsleft--;
+								if (rabbitsleft == 0) {
+									placerabbit.setBackground(Color.RED);
+								}
 							}
-						}
-						break;
-					case CAT:
-						if (catsleft > 0) {
-							panel.addPiece(new Cat(xgrid, ygrid, SILVER));
-							catsleft--;
-							if (catsleft == 0) {
-								placecat.setBackground(Color.RED);
+							break;
+						case CAT:
+							if (catsleft > 0) {
+								panel.addPiece(new Cat(xgrid, ygrid, SILVER));
+								catsleft--;
+								if (catsleft == 0) {
+									placecat.setBackground(Color.RED);
+								}
 							}
-						}
-						break;
-					case DOG:
-						if (dogsleft > 0) {
-							panel.addPiece(new Dog(xgrid, ygrid, SILVER));
-							dogsleft--;
-							if (dogsleft == 0) {
-								placedog.setBackground(Color.RED);
+							break;
+						case DOG:
+							if (dogsleft > 0) {
+								panel.addPiece(new Dog(xgrid, ygrid, SILVER));
+								dogsleft--;
+								if (dogsleft == 0) {
+									placedog.setBackground(Color.RED);
+								}
 							}
-						}
-						break;
-					case HORSE:
-						if (horsesleft > 0) {
-							panel.addPiece(new Horse(xgrid, ygrid, SILVER));
-							horsesleft--;
-							if (horsesleft == 0) {
-								placehorse.setBackground(Color.RED);
+							break;
+						case HORSE:
+							if (horsesleft > 0) {
+								panel.addPiece(new Horse(xgrid, ygrid, SILVER));
+								horsesleft--;
+								if (horsesleft == 0) {
+									placehorse.setBackground(Color.RED);
+								}
 							}
-						}
-						break;
-					case CAMEL:
-						if (camelsleft > 0) {
-							panel.addPiece(new Camel(xgrid, ygrid, SILVER));
-							camelsleft--;
-							placecamel.setBackground(Color.RED);
-						}
-						break;
-					case ELEPHANT:
-						if (elephantsleft > 0) {
-							panel.addPiece(new Elephant(xgrid, ygrid, SILVER));
-							elephantsleft--;
-							placeelephant.setBackground(Color.RED);
-						}
-						break;
-
-					default:
-						break;
-					}
-					panel.repaint();
-					if (endplacementturn()) {
-						turn = GOLD;
-						goldturnlabel.setBackground(Color.GREEN);
-						silverturnlabel.setBackground(Color.RED);
-						placementphase = false;
-						movesleftlabel.setText("Moves left: 4");
-						frame.remove(south);
-						frame.revalidate();
-					}
-				}
-				// this is the actual game portion
-			} else if (!placementphase) {
-				if (!push && !pull) {
-					if (selectedpiece == null && panel.getPiece(xgrid, ygrid) != null&&panel.getPiece(xgrid, ygrid).getColor() == turn) {// if no piece is
-																									// selected,
-																									// select a new
-																									// piece
-						selectedpiece = panel.getPiece(xgrid, ygrid);
-						panel.clearSelectedSquares();
-						panel.addSelectedSquare(selectedpiece.getX(), selectedpiece.getY());
-					} else if (panel.getPiece(xgrid, ygrid) != null && selectedpiece != null
-							&& panel.getPiece(xgrid, ygrid).getColor() == turn) {// if there is a selected piece, but
-																					// the
-																					// user
-																					// clicks a different piece, select
-																					// that
-																					// piece
-						selectedpiece = panel.getPiece(xgrid, ygrid);
-						panel.clearSelectedSquares();
-						panel.addSelectedSquare(selectedpiece.getX(), selectedpiece.getY());
-					} else if (panel.getPiece(xgrid, ygrid) == null && selectedpiece!=null) {// move the piece
-						if (panel.move(selectedpiece, xgrid, ygrid, true)) {
-							if(panel.checkWin(selectedpiece)!=0) {//game ends
-								gameEnd(panel.checkWin(selectedpiece));
+							break;
+						case CAMEL:
+							if (camelsleft > 0) {
+								panel.addPiece(new Camel(xgrid, ygrid, SILVER));
+								camelsleft--;
+								placecamel.setBackground(Color.RED);
 							}
-							movesleft--;
-							panel.clearSelectedSquares();
-							if (movesleft == 0) {
-								changeturn();
-							} else {
-								panel.addSelectedSquare(selectedpiece.getX(), selectedpiece.getY());
+							break;
+						case ELEPHANT:
+							if (elephantsleft > 0) {
+								panel.addPiece(new Elephant(xgrid, ygrid, SILVER));
+								elephantsleft--;
+								placeelephant.setBackground(Color.RED);
 							}
-							movesleftlabel.setText("Moves left: " + movesleft);
+							break;
+	
+						default:
+							break;
+						}
+						panel.repaint();
+						if (endplacementturn()) {
+							turn = GOLD;
+							goldturnlabel.setBackground(Color.GREEN);
+							silverturnlabel.setBackground(Color.RED);
+							placementphase = false;
+							movesleftlabel.setText("Moves left: 4");
+							south.remove(placebuttons);
+							south.setLayout(new GridLayout(1,1));
+							frame.revalidate();
+							messagelabel.setText("Message: Game starts! Select your piece to move");
 						}
 					}
 					else {
-						System.out.println("It is not your turn");
+						messagelabel.setText("Message: You can only place pieces on the first two rows.");
 					}
-				} else if (push) {// conditions for pushing a piece
-					// first, find mypiece
-					if (push_mypiece == null && panel.getPiece(xgrid, ygrid) != null&& panel.getPiece(xgrid, ygrid).getColor() == turn) {
-						push_mypiece = panel.getPiece(xgrid, ygrid);
-						panel.addSelectedSquare(push_mypiece.getX(), push_mypiece.getY());
-					} else if (push_otherpiece == null && panel.getPiece(xgrid, ygrid) != null && panel.getPiece(xgrid, ygrid).getColor() != turn) {
-						push_otherpiece = panel.getPiece(xgrid, ygrid);
-						panel.addSelectedSquare(push_otherpiece.getX(), push_otherpiece.getY());
-					} else if (push_xgrid == -1) {
-						push_xgrid = xgrid;
-						push_ygrid = ygrid;
-					}
-					if (push_mypiece != null && push_otherpiece != null && push_xgrid!=-1 && push_ygrid!=-1 && movesleft > 1) {
-						// do the push
-						if (panel.push(push_mypiece, push_otherpiece, push_xgrid, push_ygrid)) {
-							// the move was successfully performed
-							if(panel.checkWin(push_mypiece)!=0) {//game ends
-								gameEnd(panel.checkWin(push_mypiece));
+					// this is the actual game portion
+				} else if (!placementphase) {
+					if (!push && !pull) {
+						if (selectedpiece == null && panel.getPiece(xgrid, ygrid) != null&&panel.getPiece(xgrid, ygrid).getColor() == turn) {// if no piece is
+																										// selected,
+																										// select a new
+																										// piece
+							selectedpiece = panel.getPiece(xgrid, ygrid);
+							panel.clearSelectedSquares();
+							panel.addSelectedSquare(selectedpiece.getX(), selectedpiece.getY());
+							panel.setMessage("Select the grid to move.");
+						} else if (panel.getPiece(xgrid, ygrid) != null && selectedpiece != null
+								&& panel.getPiece(xgrid, ygrid).getColor() == turn) {// if there is a selected piece, but
+																						// the
+																						// user
+																						// clicks a different piece, select
+																						// that
+																						// piece
+							selectedpiece = panel.getPiece(xgrid, ygrid);
+							panel.clearSelectedSquares();
+							panel.addSelectedSquare(selectedpiece.getX(), selectedpiece.getY());
+							panel.setMessage("Select the grid to move.");
+						} else if (panel.getPiece(xgrid, ygrid) == null && selectedpiece!=null) {// move the piece
+							if (panel.move(selectedpiece, xgrid, ygrid, true)) {
+								if(panel.checkWin(selectedpiece)!=0) {//game ends
+									gameEnd(panel.checkWin(selectedpiece));
+								}
+								movesleft--;
+								panel.clearSelectedSquares();
+								if (movesleft == 0) {
+									changeturn();
+								} else {
+									panel.addSelectedSquare(selectedpiece.getX(), selectedpiece.getY());
+								}
+								movesleftlabel.setText("Moves left: " + movesleft);
 							}
-							if(panel.checkWin(push_otherpiece)!=0) {//game ends
-								gameEnd(panel.checkWin(push_otherpiece));
+						}
+						else {
+							panel.setMessage("It's not your turn!");
+						}
+					} else if (push) {// conditions for pushing a piece
+						// first, find mypiece
+						if (push_mypiece == null && panel.getPiece(xgrid, ygrid) != null&& panel.getPiece(xgrid, ygrid).getColor() == turn) {
+							push_mypiece = panel.getPiece(xgrid, ygrid);
+							panel.addSelectedSquare(push_mypiece.getX(), push_mypiece.getY());
+							panel.setMessage("Select the enemy piece to push.");
+						} else if (push_otherpiece == null && panel.getPiece(xgrid, ygrid) != null && panel.getPiece(xgrid, ygrid).getColor() != turn) {
+							push_otherpiece = panel.getPiece(xgrid, ygrid);
+							panel.addSelectedSquare(push_otherpiece.getX(), push_otherpiece.getY());
+							panel.setMessage("Select the grid to push.");
+						} else if (push_xgrid == -1) {
+							push_xgrid = xgrid;
+							push_ygrid = ygrid;
+						}
+						if (push_mypiece != null && push_otherpiece != null && push_xgrid!=-1 && push_ygrid!=-1) {
+							if(movesleft > 1) {
+								// do the push
+								if (panel.push(push_mypiece, push_otherpiece, push_xgrid, push_ygrid)) {
+									// the move was successfully performed
+									if(panel.checkWin(push_mypiece)!=0) {//game ends
+										gameEnd(panel.checkWin(push_mypiece));
+									}
+									if(panel.checkWin(push_otherpiece)!=0) {//game ends
+										gameEnd(panel.checkWin(push_otherpiece));
+									}
+									movesleft -= 2;
+									setpush(false);
+									if (movesleft == 0) {
+										changeturn();
+									}
+									movesleftlabel.setText("Moves left: " + movesleft);
+								}
 							}
-							movesleft -= 2;
-							movesleftlabel.setText("Moves left: " + movesleft);
-							setpush(false);
-							if (movesleft == 0) {
-								changeturn();
+							else {
+								panel.setMessage("Push requires 2 moves.");
+							}
+						}
+					} else if (pull) {// conditions for pushing a piece
+						// first, find mypiece
+						if (pull_mypiece == null && panel.getPiece(xgrid, ygrid) != null && panel.getPiece(xgrid, ygrid).getColor() == turn) {
+							pull_mypiece = panel.getPiece(xgrid, ygrid);
+							panel.addSelectedSquare(pull_mypiece.getX(), pull_mypiece.getY());
+							panel.setMessage("Select the enemy piece to pull.");
+						} else if (pull_otherpiece == null && panel.getPiece(xgrid, ygrid) != null && panel.getPiece(xgrid, ygrid).getColor() != turn) {
+							pull_otherpiece = panel.getPiece(xgrid, ygrid);
+							panel.addSelectedSquare(pull_otherpiece.getX(), pull_otherpiece.getY());
+							panel.setMessage("Select the grid to pull.");
+						} else if (pull_xgrid == -1) {
+							pull_xgrid = xgrid;
+							pull_ygrid = ygrid;
+						}
+						if (pull_mypiece != null && pull_otherpiece != null && pull_xgrid!=-1 && pull_ygrid!=-1) {
+							if(movesleft > 1) {
+								// do the push
+								if (panel.pull(pull_mypiece, pull_otherpiece, pull_xgrid, pull_ygrid)) {
+									// the move was successfully performed
+									if(panel.checkWin(pull_mypiece)!=0) {//game ends
+										gameEnd(panel.checkWin(pull_mypiece));
+									}
+									if(panel.checkWin(pull_otherpiece)!=0) {//game ends
+										gameEnd(panel.checkWin(pull_otherpiece));
+									}
+									movesleft -= 2;
+									setpull(false);
+									if (movesleft == 0) {
+										changeturn();
+									}
+									movesleftlabel.setText("Moves left: " + movesleft);
+								}
+							}
+							else {
+								panel.setMessage("Pull requires 2 moves.");
 							}
 						}
 					}
-				} else if (pull) {// conditions for pushing a piece
-					// first, find mypiece
-					if (pull_mypiece == null && panel.getPiece(xgrid, ygrid) != null && panel.getPiece(xgrid, ygrid).getColor() == turn) {
-						pull_mypiece = panel.getPiece(xgrid, ygrid);
-						panel.addSelectedSquare(pull_mypiece.getX(), pull_mypiece.getY());
-					} else if (pull_otherpiece == null && panel.getPiece(xgrid, ygrid) != null && panel.getPiece(xgrid, ygrid).getColor() != turn) {
-						pull_otherpiece = panel.getPiece(xgrid, ygrid);
-						panel.addSelectedSquare(pull_otherpiece.getX(), pull_otherpiece.getY());
-					} else if (pull_xgrid == -1) {
-						pull_xgrid = xgrid;
-						pull_ygrid = ygrid;
-					}
-					if (pull_mypiece != null && pull_otherpiece != null && pull_xgrid!=-1 && pull_ygrid!=-1 && movesleft > 1) {
-						// do the push
-						if (panel.pull(pull_mypiece, pull_otherpiece, pull_xgrid, pull_ygrid)) {
-							// the move was successfully performed
-							if(panel.checkWin(pull_mypiece)!=0) {//game ends
-								gameEnd(panel.checkWin(pull_mypiece));
-							}
-							if(panel.checkWin(pull_otherpiece)!=0) {//game ends
-								gameEnd(panel.checkWin(pull_otherpiece));
-							}
-							movesleft -= 2;
-							movesleftlabel.setText("Moves left: " + movesleft);
-							setpull(false);
-							if (movesleft == 0) {
-								changeturn();
-							}
-						}
+					if(boardInteraction) {
+						messagelabel.setText("Message: " +panel.getMessage());
 					}
 				}
 			}
@@ -445,8 +486,10 @@ public class Arimaa implements ActionListener, MouseListener {
 					push_xgrid = -1;
 					push_ygrid = -1;
 					panel.clearSelectedSquares();
+					messagelabel.setText("Message: Select piece to Push others.");
 				} else {
 					setpush(false);
+					messagelabel.setText("Message: Select piece to Move.");
 				}
 			}
 			if (e.getSource().equals(pullbutton)) {
@@ -457,27 +500,30 @@ public class Arimaa implements ActionListener, MouseListener {
 					pull_xgrid = -1;
 					pull_ygrid = -1;
 					panel.clearSelectedSquares();
+					messagelabel.setText("Message: Select piece to Pull others.");
 				} else {
 					setpull(false);
+					messagelabel.setText("Message: Select piece to Move.");
 				}
 			}
-		}
-		if(e.getSource().equals(skipbutton)) {
-			//if moves left is 4, asks if they cannot move anymore
-			if(movesleft==4) {
-				int answer = JOptionPane.showConfirmDialog(frame, "Do you mean you have no possible moves? (If yes, you will lose)");
-				if(answer == JOptionPane.YES_OPTION) {
-					gameEnd(3-turn);
+			if(e.getSource().equals(skipbutton)) {
+				//if moves left is 4, asks if they cannot move anymore
+				if(movesleft==4) {
+					int answer = JOptionPane.showConfirmDialog(frame, "Do you mean you have no possible moves? (If yes, you will lose)");
+					if(answer == JOptionPane.YES_OPTION) {
+						gameEnd(3-turn);
+					}
+					else {
+						messagelabel.setText("Message: Cancel to skip.");
+						//do nothing
+					}
 				}
 				else {
-					System.out.println("Cancel to skip");
-					//do nothing
+					changeturn();
+					movesleft=4;
+					movesleftlabel.setText("Moves left: " + movesleft);
+					messagelabel.setText("Message: Skip the moves.");
 				}
-			}
-			else {
-				changeturn();
-				movesleft=4;
-				movesleftlabel.setText("Moves left: " + movesleft);
 			}
 		}
 		if(e.getSource().equals(restartbutton)) {
@@ -560,6 +606,8 @@ public class Arimaa implements ActionListener, MouseListener {
 		else if(winner == SILVER) {
 			JOptionPane.showMessageDialog(frame, "Silver won!");
 		}
+		boardInteraction=false;
+		messagelabel.setText("Click restart!");
 	}
 	/**
 	 * restarts the game
@@ -567,7 +615,8 @@ public class Arimaa implements ActionListener, MouseListener {
 	public void restart() {
 		//see if we need to add the south buttons back.
 		if(!placementphase) {
-			frame.add(south, BorderLayout.SOUTH);
+			south.setLayout(new GridLayout(2,1));
+			south.add(placebuttons, BorderLayout.SOUTH);
 			frame.revalidate();
 			placerabbit.setBackground(Color.GREEN);
 			placecat.setBackground(Color.GREEN);
@@ -578,7 +627,7 @@ public class Arimaa implements ActionListener, MouseListener {
 		}
 		frame.revalidate();
 		
-		movesleftlabel.setText("Place Pieces!");
+		messagelabel.setText("Message: Place gold pieces!");
 		//revert to intial declarations
 		rabbitsleft = 8;
 		catsleft = 2;
@@ -588,12 +637,13 @@ public class Arimaa implements ActionListener, MouseListener {
 		elephantsleft = 1;
 
 		placementphase = true;
+		boardInteraction = true;
 
 		selectedpiece = null;
 
 		turn = GOLD;
 
-		int movesleft = 4;
+		movesleft = 4;
 
 		push = false;
 		push_mypiece = null;
@@ -608,5 +658,6 @@ public class Arimaa implements ActionListener, MouseListener {
 		pull_ygrid = -1;
 		
 		panel.reset();
+		panel.clearSelectedSquares();
 	}
 }
