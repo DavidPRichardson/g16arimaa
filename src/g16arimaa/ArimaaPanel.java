@@ -264,7 +264,7 @@ public class ArimaaPanel extends JPanel {
 				return false;
 			}
 		} else {
-			System.out.println("cannot push the piece");
+			System.out.println("cannot pull the piece");
 			return false;
 		}
 	}

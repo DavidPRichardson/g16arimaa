@@ -352,10 +352,10 @@ public class Arimaa implements ActionListener, MouseListener {
 					}
 				} else if (push) {// conditions for pushing a piece
 					// first, find mypiece
-					if (push_mypiece == null && panel.getPiece(xgrid, ygrid).getColor() == turn) {
+					if (push_mypiece == null && panel.getPiece(xgrid, ygrid) != null&& panel.getPiece(xgrid, ygrid).getColor() == turn) {
 						push_mypiece = panel.getPiece(xgrid, ygrid);
 						panel.addSelectedSquare(push_mypiece.getX(), push_mypiece.getY());
-					} else if (push_otherpiece == null && panel.getPiece(xgrid, ygrid).getColor() != turn) {
+					} else if (push_otherpiece == null && panel.getPiece(xgrid, ygrid) != null && panel.getPiece(xgrid, ygrid).getColor() != turn) {
 						push_otherpiece = panel.getPiece(xgrid, ygrid);
 						panel.addSelectedSquare(push_otherpiece.getX(), push_otherpiece.getY());
 					} else if (push_xgrid == -1) {
@@ -382,10 +382,10 @@ public class Arimaa implements ActionListener, MouseListener {
 					}
 				} else if (pull) {// conditions for pushing a piece
 					// first, find mypiece
-					if (pull_mypiece == null && panel.getPiece(xgrid, ygrid).getColor() == turn) {
+					if (pull_mypiece == null && panel.getPiece(xgrid, ygrid) != null && panel.getPiece(xgrid, ygrid).getColor() == turn) {
 						pull_mypiece = panel.getPiece(xgrid, ygrid);
 						panel.addSelectedSquare(pull_mypiece.getX(), pull_mypiece.getY());
-					} else if (pull_otherpiece == null && panel.getPiece(xgrid, ygrid).getColor() != turn) {
+					} else if (pull_otherpiece == null && panel.getPiece(xgrid, ygrid) != null && panel.getPiece(xgrid, ygrid).getColor() != turn) {
 						pull_otherpiece = panel.getPiece(xgrid, ygrid);
 						panel.addSelectedSquare(pull_otherpiece.getX(), pull_otherpiece.getY());
 					} else if (pull_xgrid == -1) {
@@ -555,10 +555,10 @@ public class Arimaa implements ActionListener, MouseListener {
 	//game ends with winner
 	public void gameEnd(int winner) {
 		if(winner==GOLD) {
-			System.out.println("gold wins");
+			JOptionPane.showMessageDialog(frame, "Gold won!");
 		}
 		else if(winner == SILVER) {
-			System.out.println("silver wins");
+			JOptionPane.showMessageDialog(frame, "Silver won!");
 		}
 	}
 	/**
