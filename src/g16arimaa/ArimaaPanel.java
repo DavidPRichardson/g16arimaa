@@ -319,6 +319,7 @@ public class ArimaaPanel extends JPanel {
 		return false;
 	}
 	
+	//method that resets all the variables
 	public void reset() {
 		rabbitcount[1]=8;
 		rabbitcount[2]=8;
@@ -327,12 +328,14 @@ public class ArimaaPanel extends JPanel {
 		repaint();
 	}
 	
+	//method to get message
 	public String getMessage() {
 		String toReturn = message;
-		message="";
+		message="";//delete the message
 		return toReturn;
 	}
 	
+	//method to set the message
 	public void setMessage(String message) {
 		this.message=message;
 	}

@@ -23,10 +23,10 @@ import javax.swing.SwingConstants;
 import javafx.scene.layout.Border;
 
 public class Arimaa implements ActionListener, MouseListener {
-	Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-	// alvinalexander.com/blog/post/jfc-swing/how-determine-get-screen-size-java-swing-app
+	//set the size of the frame
 	int width = 932;
 	int height = 800;
+	//initialize the components of the frame
 	JFrame frame = new JFrame("Arimaa");
 	ArimaaPanel panel = new ArimaaPanel();
 	Container east = new Container();
@@ -48,7 +48,7 @@ public class Arimaa implements ActionListener, MouseListener {
 	JButton placecamel = new JButton("camel");
 	JButton placeelephant = new JButton("elephant");
 
-	// ArrayList<Piece> pieces = new ArrayList<Piece>();
+	//# of each animal that has to be added to the board
 	int rabbitsleft = 8;
 	int catsleft = 2;
 	int dogsleft = 2;
@@ -56,6 +56,7 @@ public class Arimaa implements ActionListener, MouseListener {
 	int camelsleft = 1;
 	int elephantsleft = 1;
 
+	//constant for each animal
 	final int RABBIT = 0;
 	final int CAT = 1;
 	final int DOG = 2;
@@ -64,23 +65,27 @@ public class Arimaa implements ActionListener, MouseListener {
 	final int ELEPHANT = 5;
 	int piecetobeplaced;
 
+	//these variables show the phase of the game
 	boolean placementphase = true;
 	boolean boardInteraction = true;
-
+	
 	Piece selectedpiece = null;
 
+	//constant for each color
 	final int GOLD = 1;
 	final int SILVER = 2;
 	int turn = GOLD;
 
 	int movesleft = 4;
 
+	//variables for push method
 	boolean push = false;
 	Piece push_mypiece = null;
 	Piece push_otherpiece = null;
 	int push_xgrid = -1;
 	int push_ygrid = -1;
 
+	//variables for pull method
 	boolean pull = false;
 	Piece pull_mypiece = null;
 	Piece pull_otherpiece = null;
@@ -89,15 +94,18 @@ public class Arimaa implements ActionListener, MouseListener {
 	
 	String message;
 
+	//main method
 	public static void main(String args[]) {
 		new Arimaa();
 	}
 
+	//constructor
 	public Arimaa() {
 		frame.setSize(width, height);
 		frame.setLayout(new BorderLayout());
 		frame.add(panel, BorderLayout.CENTER);
 
+		//add stuff to the frame
 		east.setLayout(new GridLayout(6, 2));
 		east.add(turnlabel);
 		east.add(new JLabel(""));// empty for formating
@@ -116,11 +124,13 @@ public class Arimaa implements ActionListener, MouseListener {
 		east.add(skipbutton);
 		skipbutton.addActionListener(this);
 
+		//set background color
 		goldturnlabel.setBackground(Color.GREEN);
 		silverturnlabel.setBackground(Color.RED);
 
 		frame.add(east, BorderLayout.EAST);
 
+		//add buttons and message on the bottom
 		south.setLayout(new GridLayout(2,1));
 		placebuttons.setLayout(new GridLayout(1, 6));
 		placebuttons.add(placerabbit);
@@ -140,6 +150,7 @@ public class Arimaa implements ActionListener, MouseListener {
 		messagelabel.setBorder(BorderFactory.createLineBorder(Color.black));
 		messagelabel.setFont(new Font(messagelabel.getName(), Font.PLAIN, 20));
 
+		//set back ground color
 		placerabbit.setBackground(Color.GREEN);
 		placecat.setBackground(Color.GREEN);
 		placedog.setBackground(Color.GREEN);
@@ -150,6 +161,7 @@ public class Arimaa implements ActionListener, MouseListener {
 		frame.add(south, BorderLayout.SOUTH);
 
 		panel.addMouseListener(this);
+		//set the original state to be just moving
 		setpush(false);
 		setpull(false);
 
@@ -183,22 +195,23 @@ public class Arimaa implements ActionListener, MouseListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if(boardInteraction) {
+		if(boardInteraction) {//if board is not freezed
+			//set xgrid and ygrid to the mouse position based on the grid
 			int ygrid = e.getY() / panel.getGridsize();
 			int xgrid = e.getX() / panel.getGridsize();
-			if (xgrid >= 0 && xgrid < 8 && ygrid >= 0 && ygrid < 8) {
+			if (xgrid >= 0 && xgrid < 8 && ygrid >= 0 && ygrid < 8) {//if mouse is on the board
 				if (placementphase && panel.getPiece(xgrid, ygrid) == null && xgrid < 8) {// add pieces to the grid
 					if (turn == GOLD && (ygrid == 6 || ygrid == 7)) {// based on the piece the user wants to place,
 																		// determine
 																		// whether they can, in fact, place it at the given
 																		// square
-						switch (piecetobeplaced) {
+						switch (piecetobeplaced) {//place animals based on this variable
 						case RABBIT:
 							if (rabbitsleft > 0) {
 								panel.addPiece(new Rabbit(xgrid, ygrid, GOLD));
 								rabbitsleft--;
 								if (rabbitsleft == 0) {
-									placerabbit.setBackground(Color.RED);
+									placerabbit.setBackground(Color.RED);//change color
 								}
 							}
 							break;
@@ -248,8 +261,9 @@ public class Arimaa implements ActionListener, MouseListener {
 							break;
 						}
 						panel.repaint();
-						if (endplacementturn()) {
-							turn = SILVER;
+						if (endplacementturn()) {//if all the pieces are placed
+							turn = SILVER;//change turn
+							//reset color
 							placerabbit.setBackground(Color.GREEN);
 							placecat.setBackground(Color.GREEN);
 							placedog.setBackground(Color.GREEN);
@@ -261,14 +275,14 @@ public class Arimaa implements ActionListener, MouseListener {
 							messagelabel.setText("Message: Place silver pieces!");
 						}
 					}
-					else if (turn == SILVER && (ygrid == 0 || ygrid == 1)) {
-						switch (piecetobeplaced) {
+					else if (turn == SILVER && (ygrid == 0 || ygrid == 1)) {//if turn is silver and ygrid is appropriate
+						switch (piecetobeplaced) {//place animals based on this variable
 						case RABBIT:
 							if (rabbitsleft > 0) {
 								panel.addPiece(new Rabbit(xgrid, ygrid, SILVER));
 								rabbitsleft--;
 								if (rabbitsleft == 0) {
-									placerabbit.setBackground(Color.RED);
+									placerabbit.setBackground(Color.RED);//change color
 								}
 							}
 							break;
@@ -318,24 +332,27 @@ public class Arimaa implements ActionListener, MouseListener {
 							break;
 						}
 						panel.repaint();
-						if (endplacementturn()) {
-							turn = GOLD;
+						if (endplacementturn()) {//if all the pieces are placed
+							turn = GOLD;//change turn
 							goldturnlabel.setBackground(Color.GREEN);
 							silverturnlabel.setBackground(Color.RED);
-							placementphase = false;
+							placementphase = false;//change game phase to actual game
 							movesleftlabel.setText("Moves left: 4");
+							//remove buttons
 							south.remove(placebuttons);
 							south.setLayout(new GridLayout(1,1));
 							frame.revalidate();
 							messagelabel.setText("Message: Game starts! Select your piece to move");
 						}
 					}
-					else {
+					else {//if ygrid is not proper
 						messagelabel.setText("Message: You can only place pieces on the first two rows.");
 					}
+					
+					
 					// this is the actual game portion
-				} else if (!placementphase) {
-					if (!push && !pull) {
+				} else if (!placementphase) {//if the phase is actual game
+					if (!push && !pull) {//if it is normal moving condition
 						if (selectedpiece == null && panel.getPiece(xgrid, ygrid) != null&&panel.getPiece(xgrid, ygrid).getColor() == turn) {// if no piece is
 																										// selected,
 																										// select a new
@@ -360,6 +377,7 @@ public class Arimaa implements ActionListener, MouseListener {
 								if(panel.checkWin(selectedpiece)!=0) {//game ends
 									gameEnd(panel.checkWin(selectedpiece));
 								}
+								//decrease moveleft
 								movesleft--;
 								panel.clearSelectedSquares();
 								if (movesleft == 0) {
@@ -375,19 +393,21 @@ public class Arimaa implements ActionListener, MouseListener {
 						}
 					} else if (push) {// conditions for pushing a piece
 						// first, find mypiece
-						if (push_mypiece == null && panel.getPiece(xgrid, ygrid) != null&& panel.getPiece(xgrid, ygrid).getColor() == turn) {
+						if (push_mypiece == null && push_otherpiece == null && panel.getPiece(xgrid, ygrid) != null&& panel.getPiece(xgrid, ygrid).getColor() == turn) {//if nothing is selected, 
+																																									//set the piece as mypiece
 							push_mypiece = panel.getPiece(xgrid, ygrid);
 							panel.addSelectedSquare(push_mypiece.getX(), push_mypiece.getY());
 							panel.setMessage("Select the enemy piece to push.");
-						} else if (push_otherpiece == null && panel.getPiece(xgrid, ygrid) != null && panel.getPiece(xgrid, ygrid).getColor() != turn) {
+						} else if (push_otherpiece == null && push_mypiece!=null && panel.getPiece(xgrid, ygrid) != null && panel.getPiece(xgrid, ygrid).getColor() != turn) {//if mypiece is selected,
+																																										//set the next piece as otherpiece
 							push_otherpiece = panel.getPiece(xgrid, ygrid);
 							panel.addSelectedSquare(push_otherpiece.getX(), push_otherpiece.getY());
 							panel.setMessage("Select the grid to push.");
-						} else if (push_xgrid == -1) {
+						} else if (push_otherpiece != null && push_mypiece!=null && push_xgrid == -1) {//when the grid to push is not selected yet
 							push_xgrid = xgrid;
 							push_ygrid = ygrid;
 						}
-						if (push_mypiece != null && push_otherpiece != null && push_xgrid!=-1 && push_ygrid!=-1) {
+						if (push_mypiece != null && push_otherpiece != null && push_xgrid!=-1 && push_ygrid!=-1) {//if everything is selected, push
 							if(movesleft > 1) {
 								// do the push
 								if (panel.push(push_mypiece, push_otherpiece, push_xgrid, push_ygrid)) {
@@ -405,6 +425,10 @@ public class Arimaa implements ActionListener, MouseListener {
 									}
 									movesleftlabel.setText("Moves left: " + movesleft);
 								}
+								else {
+									panel.setMessage("Failed to push.");
+									setpush(false);
+								}
 							}
 							else {
 								panel.setMessage("Push requires 2 moves.");
@@ -412,19 +436,21 @@ public class Arimaa implements ActionListener, MouseListener {
 						}
 					} else if (pull) {// conditions for pushing a piece
 						// first, find mypiece
-						if (pull_mypiece == null && panel.getPiece(xgrid, ygrid) != null && panel.getPiece(xgrid, ygrid).getColor() == turn) {
+						if (pull_mypiece == null && pull_otherpiece == null && panel.getPiece(xgrid, ygrid) != null && panel.getPiece(xgrid, ygrid).getColor() == turn) {//if nothing is selected, 
+																																								//set the piece as mypiece
 							pull_mypiece = panel.getPiece(xgrid, ygrid);
 							panel.addSelectedSquare(pull_mypiece.getX(), pull_mypiece.getY());
 							panel.setMessage("Select the enemy piece to pull.");
-						} else if (pull_otherpiece == null && panel.getPiece(xgrid, ygrid) != null && panel.getPiece(xgrid, ygrid).getColor() != turn) {
+						} else if (pull_otherpiece == null && pull_mypiece!=null && panel.getPiece(xgrid, ygrid) != null && panel.getPiece(xgrid, ygrid).getColor() != turn) {//if mypiece is selected,
+																																								//set the next piece as otherpiece
 							pull_otherpiece = panel.getPiece(xgrid, ygrid);
 							panel.addSelectedSquare(pull_otherpiece.getX(), pull_otherpiece.getY());
 							panel.setMessage("Select the grid to pull.");
-						} else if (pull_xgrid == -1) {
+						} else if (pull_xgrid == -1 && pull_otherpiece != null && pull_mypiece!=null ) {//when the grid to pull is not selected yet
 							pull_xgrid = xgrid;
 							pull_ygrid = ygrid;
 						}
-						if (pull_mypiece != null && pull_otherpiece != null && pull_xgrid!=-1 && pull_ygrid!=-1) {
+						if (pull_mypiece != null && pull_otherpiece != null && pull_xgrid!=-1 && pull_ygrid!=-1) {//when everything is selected, pull
 							if(movesleft > 1) {
 								// do the push
 								if (panel.pull(pull_mypiece, pull_otherpiece, pull_xgrid, pull_ygrid)) {
@@ -442,6 +468,10 @@ public class Arimaa implements ActionListener, MouseListener {
 									}
 									movesleftlabel.setText("Moves left: " + movesleft);
 								}
+								else {
+									panel.setMessage("Failed to Pull");
+									setpull(false);
+								}
 							}
 							else {
 								panel.setMessage("Pull requires 2 moves.");
@@ -458,7 +488,7 @@ public class Arimaa implements ActionListener, MouseListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		//set the piecetobeplaced method to each animal's constant when the button is clicked
 		if (e.getSource().equals(placerabbit)) {
 			piecetobeplaced = RABBIT;
 		}
@@ -477,9 +507,9 @@ public class Arimaa implements ActionListener, MouseListener {
 		if (e.getSource().equals(placeelephant)) {
 			piecetobeplaced = ELEPHANT;
 		}
-		if (!placementphase) {
-			if (e.getSource().equals(pushbutton)) {
-				if (!push) {
+		if (!placementphase) {//if in actual game portion
+			if (e.getSource().equals(pushbutton)) {//push button
+				if (!push) {//set the condition to push
 					setpush(true);
 					push_mypiece = null;
 					push_otherpiece = null;
@@ -487,13 +517,13 @@ public class Arimaa implements ActionListener, MouseListener {
 					push_ygrid = -1;
 					panel.clearSelectedSquares();
 					messagelabel.setText("Message: Select piece to Push others.");
-				} else {
+				} else {//set the condition to move
 					setpush(false);
 					messagelabel.setText("Message: Select piece to Move.");
 				}
 			}
-			if (e.getSource().equals(pullbutton)) {
-				if (!pull) {
+			if (e.getSource().equals(pullbutton)) {//pull button
+				if (!pull) {//set the condition to pull
 					setpull(true);
 					pull_mypiece = null;
 					pull_otherpiece = null;
@@ -501,12 +531,12 @@ public class Arimaa implements ActionListener, MouseListener {
 					pull_ygrid = -1;
 					panel.clearSelectedSquares();
 					messagelabel.setText("Message: Select piece to Pull others.");
-				} else {
+				} else {//set the condition to move
 					setpull(false);
 					messagelabel.setText("Message: Select piece to Move.");
 				}
 			}
-			if(e.getSource().equals(skipbutton)) {
+			if(e.getSource().equals(skipbutton)) {//skip button
 				//if moves left is 4, asks if they cannot move anymore
 				if(movesleft==4) {
 					int answer = JOptionPane.showConfirmDialog(frame, "Do you mean you have no possible moves? (If yes, you will lose)");
@@ -518,7 +548,7 @@ public class Arimaa implements ActionListener, MouseListener {
 						//do nothing
 					}
 				}
-				else {
+				else {//skip 
 					changeturn();
 					movesleft=4;
 					movesleftlabel.setText("Moves left: " + movesleft);
@@ -526,7 +556,7 @@ public class Arimaa implements ActionListener, MouseListener {
 				}
 			}
 		}
-		if(e.getSource().equals(restartbutton)) {
+		if(e.getSource().equals(restartbutton)) {//restart button
 			restart();
 		}
 	}
@@ -551,6 +581,7 @@ public class Arimaa implements ActionListener, MouseListener {
 		}
 	}
 
+	//method that changes the turn
 	public void changeturn() {
 		if (turn == GOLD) {
 			turn = SILVER;
@@ -566,6 +597,7 @@ public class Arimaa implements ActionListener, MouseListener {
 		
 	}
 
+	//set pull condition
 	public void setpull(boolean b) {
 		if (b) {
 			pull = true;
@@ -582,6 +614,7 @@ public class Arimaa implements ActionListener, MouseListener {
 		}
 	}
 
+	//set push condition
 	public void setpush(boolean b) {
 		if (b) {
 			push = true;
@@ -606,7 +639,7 @@ public class Arimaa implements ActionListener, MouseListener {
 		else if(winner == SILVER) {
 			JOptionPane.showMessageDialog(frame, "Silver won!");
 		}
-		boardInteraction=false;
+		boardInteraction=false;//freeze the board
 		messagelabel.setText("Click restart!");
 	}
 	/**

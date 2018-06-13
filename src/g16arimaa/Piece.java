@@ -54,8 +54,10 @@ public class Piece {
 		return false;
 	}
 	
+	//returns boolean value if the piece can move to the moved grid
+	//check_backward is only used in rabbit piece
 	public boolean possibleMoves(int moved_xgrid,int moved_ygrid,boolean check_backward) {
-		if(Math.abs(moved_xgrid - getX()) + Math.abs(moved_ygrid - getY()) == 1) {
+		if(Math.abs(moved_xgrid - getX()) + Math.abs(moved_ygrid - getY()) == 1) {//if it is next to the grid
 			return true;
 		}
 		return false;
